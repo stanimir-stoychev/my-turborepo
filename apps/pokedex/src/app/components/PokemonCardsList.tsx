@@ -1,110 +1,49 @@
 'use client';
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
-import { useEffectOnce } from 'react-use';
+import { useZact } from 'zact/client';
 
-import { TPokedexRepoSearchResults } from 'prisma-db';
 import { useIntersection } from '@/hooks';
 
+import { pokemonSearchAction } from '../actions';
 import { PokemonCard } from './PokemonCard';
 
 type PokemonCardsListProps = {
     cursor?: string;
-    limit: number;
+    limit?: number;
 };
 
-abstract class InfinitePokemonCache {
-    private static readonly cache: Map<string, { data: TPokedexRepoSearchResults; timeoutId: NodeJS.Timeout }> =
-        new Map();
-
-    static readonly readFromCache = ({ query, timeToLive = 60 * 1000 }: { query: string; timeToLive?: number }) => {
-        const { data, timeoutId } = InfinitePokemonCache.cache.get(query) ?? {};
-
-        if (!data) return;
-
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-            InfinitePokemonCache.cache.set(query, {
-                data,
-                timeoutId: setTimeout(() => {
-                    InfinitePokemonCache.cache?.delete?.(query);
-                }, timeToLive),
-            });
-        }
-
-        return data;
-    };
-
-    static readonly saveToCache = ({
-        query,
-        data,
-        timeToLive = 60 * 1000,
-    }: {
-        query: string;
-        data: TPokedexRepoSearchResults;
-        timeToLive?: number;
-    }) => {
-        const timeoutId = setTimeout(() => {
-            InfinitePokemonCache.cache?.delete?.(query);
-        }, timeToLive);
-
-        InfinitePokemonCache.cache.set(query, { data, timeoutId });
-    };
-}
-
-const useInfinitePokemon = (query: PokemonCardsListProps) => {
-    const [data, setData] = useState<TPokedexRepoSearchResults[]>([]);
-    const [error, setError] = useState<unknown>();
-    const [{ cursor, hasNextPage, isLoading }, setMetaData] = useState({
-        cursor: query.cursor,
-        hasNextPage: false,
-        isLoading: true,
-    });
-
-    const fetchData = useCallback(() => {
-        const searchParams = new URLSearchParams();
-        searchParams.set('limit', `${query.limit}`);
-        if (cursor) searchParams.set('cursor', `${cursor}`);
-
-        const searchQuery = searchParams.toString();
-        const updateData = (nextPage: TPokedexRepoSearchResults) => {
-            setData((prevPages) => [...prevPages, nextPage]);
-            setMetaData({
-                cursor: nextPage.nextCursor,
-                hasNextPage: !!nextPage.nextCursor,
-                isLoading: false,
-            });
-        };
-
-        const cachedData = InfinitePokemonCache.readFromCache({ query: searchQuery });
-        if (cachedData) {
-            updateData(cachedData);
-            return;
-        }
-
-        setMetaData((prev) => ({ ...prev, isLoading: true }));
-        fetch(`/api/pokedex/search?${searchQuery}`)
-            .then(async (res) => {
-                const nextPage: TPokedexRepoSearchResults = await res.json();
-                InfinitePokemonCache.saveToCache({ query: searchQuery, data: nextPage });
-                updateData(nextPage);
-            })
-            .catch(setError);
-    }, [cursor, query.limit]);
+const useInfinitePokemon = (searchQuery: PokemonCardsListProps) => {
+    const { data: zactData, isLoading: zactIsLoading, mutate } = useZact(pokemonSearchAction);
+    const [data, setData] = useState([] as NonNullable<typeof zactData>[]);
+    const [nextPageParams, setNextPageParams] = useState(searchQuery);
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasFetchedOnce, setHasFetchedOnce] = useState(false);
 
     const fetchNextPage = useCallback(() => {
-        if (!hasNextPage || isLoading) return;
-        fetchData();
-    }, [fetchData, hasNextPage, isLoading]);
+        if (isLoading || zactIsLoading) return;
 
-    useEffectOnce(fetchData);
+        setHasFetchedOnce(true);
+        setIsLoading(true);
+        mutate(nextPageParams);
+    }, [nextPageParams, zactIsLoading, mutate]);
+
+    useEffect(() => {
+        if (!zactData) return;
+
+        setIsLoading(false);
+        setData((prevData) => [...prevData, zactData]);
+        setNextPageParams((prevParams) => ({
+            ...prevParams,
+            cursor: zactData?.nextCursor,
+        }));
+    }, [zactData]);
 
     return {
         data,
-        error,
         fetchNextPage,
-        hasNextPage,
-        isLoading,
+        hasNextPage: !hasFetchedOnce ? true : !!zactData?.nextCursor,
+        isLoading: zactIsLoading || isLoading,
     };
 };
 
@@ -122,18 +61,13 @@ const LoadingSkeleton: React.FC = () => (
 );
 
 export const PokemonCardsList: React.FC<PokemonCardsListProps> = (props) => {
-    const { data, isLoading, error, hasNextPage, fetchNextPage } = useInfinitePokemon(props);
-    const { captureIntersectionElement, intersection } = useIntersection(useMemo(() => ({ threshold: 1 }), []));
+    const loadMoreInterceptor = useIntersection(useMemo(() => ({ threshold: 1 }), []));
+    const { data, fetchNextPage, hasNextPage, isLoading } = useInfinitePokemon(props);
 
     useEffect(() => {
-        if (intersection?.isIntersecting && hasNextPage && !error) {
-            fetchNextPage();
-        }
-    }, [intersection?.isIntersecting, hasNextPage, error, fetchNextPage]);
-
-    if (error) {
-        return <div>Error</div>;
-    }
+        if (!loadMoreInterceptor.intersection?.isIntersecting || !hasNextPage || isLoading) return;
+        fetchNextPage();
+    }, [loadMoreInterceptor.intersection?.isIntersecting, isLoading, fetchNextPage]);
 
     return (
         <>
@@ -145,7 +79,7 @@ export const PokemonCardsList: React.FC<PokemonCardsListProps> = (props) => {
                 </Fragment>
             ))}
             {isLoading && <LoadingSkeleton />}
-            <div ref={captureIntersectionElement} />
+            <div ref={loadMoreInterceptor.captureIntersectionElement} />
         </>
     );
 };

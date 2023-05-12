@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
     experimental: {
-        appDir: true,
+        serverActions: true,
     },
     images: {
         domains: ['raw.githubusercontent.com'],
