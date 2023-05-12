@@ -6,7 +6,7 @@ import { useZact } from 'zact/client';
 import { useIntersection } from '@/hooks';
 
 import { pokemonSearchAction } from '../actions';
-import { PokemonCard } from './PokemonCard';
+import { PokemonCard, PokemonCardSkeletons } from './PokemonCard';
 
 type PokemonCardsListProps = {
     cursor?: string;
@@ -47,19 +47,6 @@ const useInfinitePokemon = (searchQuery: PokemonCardsListProps) => {
     };
 };
 
-const LoadingSkeleton: React.FC = () => (
-    <>
-        {Array.from({ length: 10 }, (_, index) => (
-            <div key={index} className="relative h-48 p-4 space-y-2 rounded bg-neutral animate-pulse">
-                <div className="w-32 h-6 rounded bg-neutral-focus" />
-                <div className="w-16 h-6 rounded bg-neutral-focus" />
-                <div className="w-16 h-6 rounded bg-neutral-focus" />
-                <div className="absolute w-24 h-24 rounded bottom-2 right-2 bg-neutral-focus" />
-            </div>
-        ))}
-    </>
-);
-
 export const PokemonCardsList: React.FC<PokemonCardsListProps> = (props) => {
     const loadMoreInterceptor = useIntersection(useMemo(() => ({ threshold: 1 }), []));
     const { data, fetchNextPage, hasNextPage, isLoading } = useInfinitePokemon(props);
@@ -79,7 +66,7 @@ export const PokemonCardsList: React.FC<PokemonCardsListProps> = (props) => {
                     ))}
                 </Fragment>
             ))}
-            {isLoading && <LoadingSkeleton />}
+            {isLoading && <PokemonCardSkeletons length={props.limit} />}
             <div ref={loadMoreInterceptor.captureIntersectionElement} />
         </>
     );
