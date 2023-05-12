@@ -7,12 +7,12 @@ export default async function Home() {
 
     return (
         <>
-            <div className="container grid grid-cols-2 gap-4 p-4 mx-auto md:grid-cols-4">
+            <main className="container grid grid-cols-2 gap-4 p-4 mx-auto md:grid-cols-4">
                 {results.map((pokemon) => (
                     <PokemonCard key={pokemon.name} pokemon={pokemon} />
                 ))}
                 <PokemonCardsList cursor={nextCursor} limit={limit} />
-            </div>
+            </main>
         </>
     );
 }

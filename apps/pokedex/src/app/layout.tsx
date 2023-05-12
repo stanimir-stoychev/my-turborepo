@@ -1,5 +1,5 @@
-import { APP_DRAWER_CONTENT_ID, APP_DRAWER_TOGGLE_ID } from '@/constants';
 import { AppDrawer, AppDrawerToggle, AppFooter, AppNavbar } from './components';
+import { APP_DRAWER_CONTENT_ID, APP_DRAWER_TOGGLE_ID } from './components/constants';
 
 import './globals.css';
 
