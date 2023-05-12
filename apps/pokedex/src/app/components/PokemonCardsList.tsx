@@ -26,7 +26,7 @@ const useInfinitePokemon = (searchQuery: PokemonCardsListProps) => {
         setHasFetchedOnce(true);
         setIsLoading(true);
         mutate(nextPageParams);
-    }, [nextPageParams, zactIsLoading, mutate]);
+    }, [nextPageParams, isLoading, zactIsLoading, mutate]);
 
     useEffect(() => {
         if (!zactData) return;
@@ -66,8 +66,9 @@ export const PokemonCardsList: React.FC<PokemonCardsListProps> = (props) => {
 
     useEffect(() => {
         if (!loadMoreInterceptor.intersection?.isIntersecting || !hasNextPage || isLoading) return;
+
         fetchNextPage();
-    }, [loadMoreInterceptor.intersection?.isIntersecting, isLoading, fetchNextPage]);
+    }, [loadMoreInterceptor.intersection?.isIntersecting, hasNextPage, isLoading, fetchNextPage]);
 
     return (
         <>

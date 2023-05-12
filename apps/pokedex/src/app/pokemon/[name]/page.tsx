@@ -38,12 +38,14 @@ export default async function PokemonPage({ params }: PageProps) {
                             <PokemonAbout pokemon={pokemon} />
                         </div>
                         <div>
+                            {/* @ts-expect-error Async Server Component */}
                             <PokemonBaseStats pokemon={pokemon} />
                         </div>
                         <div>
                             <PokemonEvolutionChain pokemon={pokemon} />
                         </div>
                         <div>
+                            {/* @ts-expect-error Async Server Component */}
                             <PokemonMoves pokemon={pokemon} />
                         </div>
                     </Tabs>
