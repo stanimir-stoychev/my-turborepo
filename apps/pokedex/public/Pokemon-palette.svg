@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+      <!-- Pokemon - https://coolors.co/213a73-3b5ba5-6986c9-70c8ff-90ff77-ff6464-ee8b34-dcb104-facc0b-fce173 -->
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 500 250" xml:space="preserve">
+        <rect fill="#213a73" x="0" y="0" width="50" height="220"/>,<rect fill="#3b5ba5" x="50" y="0" width="50" height="220"/>,<rect fill="#6986c9" x="100" y="0" width="50" height="220"/>,<rect fill="#70c8ff" x="150" y="0" width="50" height="220"/>,<rect fill="#90ff77" x="200" y="0" width="50" height="220"/>,<rect fill="#ff6464" x="250" y="0" width="50" height="220"/>,<rect fill="#ee8b34" x="300" y="0" width="50" height="220"/>,<rect fill="#dcb104" x="350" y="0" width="50" height="220"/>,<rect fill="#facc0b" x="400" y="0" width="50" height="220"/>,<rect fill="#fce173" x="450" y="0" width="50" height="220"/>
+        <text x="10" y="235" font-family="Arial" font-size="6" alignment-baseline="middle">Pokemon</text>
+        <text x="490" y="235" font-family="Arial" font-size="6" alignment-baseline="middle" text-anchor="end">https://coolors.co/213a73-3b5ba5-6986c9-70c8ff-90ff77-ff6464-ee8b34-dcb104-facc0b-fce173</text>
+      </svg>

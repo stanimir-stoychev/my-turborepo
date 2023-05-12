@@ -1,0 +1,181 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Pokedex_Generation {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // basic data
+  name String @unique
+
+  // relationships
+  abilities Pokedex_Ability[] @relation("generation-abilities")
+  moves     Pokedex_Move[]    @relation("generation-moves")
+  species   Pokedex_Species[] @relation("generation-species")
+  types     Pokedex_Type[]    @relation("generation-types")
+
+  @@index([id])
+}
+
+model Pokedex_EggGroup {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String @unique
+
+  // relationships
+  species Pokedex_Species[] @relation("species-egg-groups")
+
+  @@index([id])
+}
+
+model Pokedex_Ability {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // basic data
+  name String @unique
+
+  // relationships
+  generation   Pokedex_Generation? @relation("generation-abilities", fields: [generationId], references: [id])
+  generationId Int?
+  pokemon      Pokedex_Pokemon[]   @relation("pokemon-abilities")
+
+  @@index([id])
+  @@index([generationId])
+}
+
+model Pokedex_Move {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // basic data
+  name String @unique
+
+  // relationships
+  generation   Pokedex_Generation? @relation("generation-moves", fields: [generationId], references: [id])
+  generationId Int?
+  pokemon      Pokedex_Pokemon[]   @relation("pokemon-moves")
+  type         Pokedex_Type?       @relation("move-types", fields: [typeId], references: [id])
+  typeId       Int?
+
+  @@index([id])
+  @@index([generationId])
+  @@index([typeId])
+}
+
+model Pokedex_Type {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // basic data
+  name String @unique
+
+  // self relationships
+  doubleDamageTo      Pokedex_Type[] @relation("DoubleDamageTo")
+  doubleDamageToRef   Pokedex_Type[] @relation("DoubleDamageTo")
+  doubleDamageFrom    Pokedex_Type[] @relation("DoubleDamageFrom")
+  doubleDamageFromRef Pokedex_Type[] @relation("DoubleDamageFrom")
+  halfDamageTo        Pokedex_Type[] @relation("HalfDamageTo")
+  halfDamageToRef     Pokedex_Type[] @relation("HalfDamageTo")
+  halfDamageFrom      Pokedex_Type[] @relation("HalfDamageToFrom")
+  halfDamageFromRef   Pokedex_Type[] @relation("HalfDamageToFrom")
+  noDamageTo          Pokedex_Type[] @relation("NoDamageTo")
+  noDamageToRef       Pokedex_Type[] @relation("NoDamageTo")
+  noDamageFrom        Pokedex_Type[] @relation("NoDamageFrom")
+  noDamageFromRef     Pokedex_Type[] @relation("NoDamageFrom")
+
+  // relationships
+  generation   Pokedex_Generation? @relation("generation-types", fields: [generationId], references: [id])
+  generationId Int?
+  moves        Pokedex_Move[]      @relation("move-types")
+  pokemon      Pokedex_Pokemon[]   @relation("pokemon-types")
+
+  @@index([id])
+  @@index([generationId])
+}
+
+model Pokedex_Species {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // basic data
+  name       String @unique
+  color      String @default("")
+  femaleRate Float  @default(-1)
+  hatchSteps Int    @default(0)
+  evolvesTo  String @default("")
+
+  // relationships
+  eggGroups        Pokedex_EggGroup[]      @relation("species-egg-groups")
+  evolutionChain   Pokedex_EvolutionChain? @relation("evolution-chain-species", fields: [evolutionChainId], references: [id])
+  evolutionChainId Int?
+  generation       Pokedex_Generation?     @relation("generation-species", fields: [generationId], references: [id])
+  generationId     Int?
+  pokemon          Pokedex_Pokemon?        @relation("pokemon-species")
+  pokemonId        Int?                    @unique
+
+  @@index([id])
+  @@index([evolvesTo])
+  @@index([evolutionChainId])
+  @@index([generationId])
+  @@index([pokemonId])
+}
+
+model Pokedex_Pokemon {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // basic data
+  name           String  @unique
+  picture        String?
+  picturePalette Json?
+  height         Float   @default(0)
+  weight         Float   @default(0)
+
+  // stats
+  hp        Int @default(0)
+  attack    Int @default(0)
+  defense   Int @default(0)
+  spAttack  Int @default(0)
+  spDefense Int @default(0)
+  speed     Int @default(0)
+
+  // relationships
+  abilities Pokedex_Ability[] @relation("pokemon-abilities")
+  moves     Pokedex_Move[]    @relation("pokemon-moves")
+  species   Pokedex_Species?  @relation("pokemon-species", fields: [speciesId], references: [id])
+  speciesId Int?              @unique
+  types     Pokedex_Type[]    @relation("pokemon-types")
+
+  @@index([id])
+  @@index([speciesId])
+}
+
+model Pokedex_EvolutionChain {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relationships
+  species Pokedex_Species[] @relation("evolution-chain-species")
+
+  @@index([id])
+}

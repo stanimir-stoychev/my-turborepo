@@ -1,0 +1,33 @@
+{
+    "name": "prisma-db",
+    "version": "0.0.1",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "scripts": {
+        "db:clear": "ts-node ./scripts/clear-db.ts",
+        "db:generate": "prisma generate",
+        "db:push": "prisma db push --skip-generate",
+        "db:seed": "ts-node ./scripts/seed.ts"
+    },
+    "prisma": {
+        "seed": "ts-node ./scripts/seed.ts"
+    },
+    "dependencies": {
+        "@prisma/client": "^4.13.0"
+    },
+    "devDependencies": {
+        "@types/chroma-js": "^2.4.0",
+        "@types/get-image-colors": "^4.0.2",
+        "@types/node": "^20.1.0",
+        "axios": "^1.4.0",
+        "axios-cache-interceptor": "^1.0.1",
+        "chroma-js": "^2.4.2",
+        "eslint-config-custom": "workspace:*",
+        "get-image-colors": "^4.0.1",
+        "pokenode-ts": "^1.18.3",
+        "prisma": "^4.13.0",
+        "ts-node": "^10.9.1",
+        "tsconfig": "workspace:*",
+        "typescript": "^5.0.4"
+    }
+}
