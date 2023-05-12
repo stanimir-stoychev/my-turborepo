@@ -1,5 +1,5 @@
-import { AppDrawer, AppDrawerToggle, AppFooter, AppNavbar } from '@/src/components';
-import { APP_DRAWER_CONTENT_ID, APP_DRAWER_TOGGLE_ID } from '@/src/constants';
+import { AppDrawer, AppDrawerToggle, AppFooter, AppNavbar } from './components';
+import { APP_DRAWER_CONTENT_ID, APP_DRAWER_TOGGLE_ID } from './components/constants';
 
 import './globals.css';
 
@@ -14,7 +14,7 @@ const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => (
             <input tabIndex={-1} id={APP_DRAWER_TOGGLE_ID} type="checkbox" className="drawer-toggle" />
             <div id={APP_DRAWER_CONTENT_ID} className="flex flex-col drawer-content">
                 <AppNavbar />
-                <main className="flex-1">{children}</main>
+                <div className="flex-1">{children}</div>
                 <AppFooter />
             </div>
             <div className="drawer-side">

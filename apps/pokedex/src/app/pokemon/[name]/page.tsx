@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { PokedexRepo } from 'prisma-db';
+import { Tabs } from '@/components';
 import {
     PokemonAbout,
     PokemonBaseStats,
@@ -8,8 +9,7 @@ import {
     PokemonHero,
     PokemonMoves,
     PokemonSpotlight,
-    Tabs,
-} from '@/src/components';
+} from './components';
 
 type PageProps = {
     params: {
@@ -38,12 +38,14 @@ export default async function PokemonPage({ params }: PageProps) {
                             <PokemonAbout pokemon={pokemon} />
                         </div>
                         <div>
+                            {/* @ts-expect-error Async Server Component */}
                             <PokemonBaseStats pokemon={pokemon} />
                         </div>
                         <div>
                             <PokemonEvolutionChain pokemon={pokemon} />
                         </div>
                         <div>
+                            {/* @ts-expect-error Async Server Component */}
                             <PokemonMoves pokemon={pokemon} />
                         </div>
                     </Tabs>

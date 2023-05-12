@@ -1,5 +1,5 @@
 import { TPokedexRepoPokemon } from 'prisma-db';
-import { AwesomeIcon } from '@/src/components/AwesomeIcon';
+import { AwesomeIcon } from '@/components/AwesomeIcon';
 
 const toUppedCase = (str: string) => str[0].toUpperCase() + str.slice(1);
 

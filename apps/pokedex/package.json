@@ -14,6 +14,7 @@
         "@fortawesome/free-regular-svg-icons": "^6.4.0",
         "@fortawesome/free-solid-svg-icons": "^6.4.0",
         "@fortawesome/react-fontawesome": "^0.2.0",
+        "@t3-oss/env-nextjs": "^0.3.1",
         "chroma-js": "^2.4.2",
         "clsx": "^1.2.1",
         "daisyui": "^2.51.6",
@@ -22,7 +23,9 @@
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "react-use": "^17.4.0",
-        "ui": "workspace:*"
+        "ui": "workspace:*",
+        "zact": "^0.0.2",
+        "zod": "^3.21.4"
     },
     "devDependencies": {
         "@babel/core": "^7.21.8",
