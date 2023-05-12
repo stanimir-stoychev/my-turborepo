@@ -1,7 +1,7 @@
 import NextImage from 'next/image';
 
 import { TPokedexRepoPokemon } from 'prisma-db';
-import { StringUtils } from '@/src/utils';
+import { StringUtils } from '@/utils';
 
 export const PokemonSpotlight: React.FC<{ pokemon: NonNullable<TPokedexRepoPokemon> }> = ({ pokemon }) => (
     <aside

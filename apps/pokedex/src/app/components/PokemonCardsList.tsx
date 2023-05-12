@@ -4,7 +4,7 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { useEffectOnce } from 'react-use';
 
 import { TPokedexRepoSearchResults } from 'prisma-db';
-import { useIntersection } from '@/src/hooks';
+import { useIntersection } from '@/hooks';
 
 import { PokemonCard } from './PokemonCard';
 

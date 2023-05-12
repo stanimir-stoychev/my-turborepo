@@ -1,5 +1,5 @@
 import { PokedexRepo } from 'prisma-db';
-import { PokemonCard, PokemonCardsList } from '@/src/components';
+import { PokemonCard, PokemonCardsList } from './components';
 
 export default async function Home() {
     const limit = 20;

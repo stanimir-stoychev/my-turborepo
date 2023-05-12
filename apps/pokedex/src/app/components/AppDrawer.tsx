@@ -3,8 +3,8 @@
 import { forwardRef, useCallback } from 'react';
 import { useKey } from 'react-use';
 
-import { APP_DRAWER_TOGGLE_ID } from '@/src/constants';
-import { TBaseElement } from '@/src/types';
+import { APP_DRAWER_TOGGLE_ID } from '@/constants';
+import { TBaseElement } from '@/types';
 
 export const AppDrawerToggle = forwardRef(function AppDrawerToggle(
     { onKeyDown, ...props }: TBaseElement<HTMLLabelElement>,
