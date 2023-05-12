@@ -17,7 +17,7 @@ export const Tabs: React.FC<TTabsProps> = ({ children, className, tabs }) => {
                 {tabs.map((tab, index) => (
                     <button
                         key={index}
-                        className={`tab tab-lg tab-bordered ${index === activeIndex ? 'tab-active' : ''}`}
+                        className={`tab tab-md md:tab-lg tab-bordered ${index === activeIndex ? 'tab-active' : ''}`}
                         onClick={() => setActiveIndex(index)}
                     >
                         {tab}

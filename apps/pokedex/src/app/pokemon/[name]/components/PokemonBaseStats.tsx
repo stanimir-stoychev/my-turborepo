@@ -1,4 +1,4 @@
-import { PokedexRepo, TPokedexRepoPokemon, TPokedexRepoPokemonBaseStatsMarkers } from 'prisma-db';
+import { PokedexRepo, TPokedexRepoPokemon } from 'prisma-db';
 
 export async function PokemonBaseStats({ pokemon }: { pokemon: TPokedexRepoPokemon }) {
     const baseStatsMarkers = await PokedexRepo.getPokemonBaseStatsMarkers();

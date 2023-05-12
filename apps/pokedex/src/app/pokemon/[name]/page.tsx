@@ -32,7 +32,7 @@ export default async function PokemonPage({ params }: PageProps) {
                 style={{ color: pokemon.picturePalette?.primary?.base.text }}
             >
                 <PokemonHero pokemon={pokemon} />
-                <div className="flex flex-col gap-y-6">
+                <div className="flex flex-col pb-4 mb-6 gap-y-6">
                     <Tabs tabs={['About', 'Base Stats', 'Evolution', 'Moves']}>
                         <div>
                             <PokemonAbout pokemon={pokemon} />

@@ -67,7 +67,9 @@ export const getPokemonByNameOrId = async (name: number | string) => {
                         include: {
                             species: {
                                 select: {
+                                    id: true,
                                     name: true,
+                                    evolvesTo: true,
                                     pokemon: {
                                         select: {
                                             picture: true,
