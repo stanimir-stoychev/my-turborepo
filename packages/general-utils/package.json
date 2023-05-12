@@ -1,0 +1,11 @@
+{
+    "name": "general-utils",
+    "version": "0.0.1",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "devDependencies": {
+        "eslint-config-custom": "workspace:*",
+        "tsconfig": "workspace:*",
+        "typescript": "^5.0.4"
+    }
+}
