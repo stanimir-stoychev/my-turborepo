@@ -1,11 +1,14 @@
-import { PokedexRepo, TPokedexRepoPokemon } from 'prisma-db';
+import { TPokedexRepoPokemon, TPokedexRepoPokemonBaseStatsMarkers } from 'prisma-db';
 
-export async function PokemonBaseStats({ pokemon }: { pokemon: TPokedexRepoPokemon }) {
-    const baseStatsMarkers = await PokedexRepo.getPokemonBaseStatsMarkers();
-    const generationBaseStatsMarkers = pokemon.species?.generation
-        ? await PokedexRepo.getPokemonBaseStatsMarkers([pokemon.species.generation])
-        : undefined;
+type TPokemonBaseStatsProps = {
+    pokemon: TPokedexRepoPokemon;
+    stats: {
+        overall: TPokedexRepoPokemonBaseStatsMarkers;
+        generation?: TPokedexRepoPokemonBaseStatsMarkers;
+    };
+};
 
+export function PokemonBaseStats({ pokemon, stats }: TPokemonBaseStatsProps) {
     const { format } = Intl.NumberFormat('en-US', { maximumFractionDigits: 2 });
     const statsArr = [
         ['HP', 'hp'] as const,
@@ -19,19 +22,19 @@ export async function PokemonBaseStats({ pokemon }: { pokemon: TPokedexRepoPokem
     const baseStatsArray = statsArr.map(([label, key]) => ({
         label,
         value: pokemon[key],
-        highest: baseStatsMarkers.highest[key],
+        highest: stats.overall.highest[key],
         offset: 10,
-        avg: baseStatsMarkers.average[key],
-        lowest: baseStatsMarkers.lowest[key],
+        avg: stats.overall.average[key],
+        lowest: stats.overall.lowest[key],
     }));
 
     const totalStat = {
         label: 'Total',
         value: statsArr.reduce((acc, [label, key]) => acc + pokemon[key], 0),
-        highest: Object.values(baseStatsMarkers.highest).reduce((acc, stat) => acc + stat, 0),
+        highest: Object.values(stats.overall.highest).reduce((acc, stat) => acc + stat, 0),
         offset: 60,
-        avg: Object.values(baseStatsMarkers.average).reduce((acc, stat) => acc + stat, 0),
-        lowest: Object.values(baseStatsMarkers.lowest).reduce((acc, stat) => acc + stat, 0),
+        avg: Object.values(stats.overall.average).reduce((acc, stat) => acc + stat, 0),
+        lowest: Object.values(stats.overall.lowest).reduce((acc, stat) => acc + stat, 0),
     };
 
     return (

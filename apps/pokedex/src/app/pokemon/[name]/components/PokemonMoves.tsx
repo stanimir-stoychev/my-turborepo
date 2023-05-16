@@ -1,12 +1,6 @@
-import { PokedexRepo, TPokedexRepoPokemon } from 'prisma-db';
+import { TPokedexRepoPokemon } from 'prisma-db';
 
-export async function PokemonMoves({ pokemon }: { pokemon: TPokedexRepoPokemon }) {
-    const moves = await PokedexRepo.prismaClient.pokedex_Move.findMany({
-        where: {
-            name: { in: pokemon.moves.map((move) => move) },
-        },
-    });
-
+export function PokemonMoves({ pokemon, moves }: { pokemon: TPokedexRepoPokemon; moves: any[] }) {
     return (
         <ul>
             {moves.map((move) => (

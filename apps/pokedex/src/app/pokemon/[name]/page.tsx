@@ -24,6 +24,17 @@ export default async function PokemonPage({ params }: PageProps) {
         redirect('/404');
     }
 
+    const [overall, generation] = await Promise.all([
+        PokedexRepo.getPokemonBaseStatsMarkers(),
+        pokemon.species?.generation ? PokedexRepo.getPokemonBaseStatsMarkers([pokemon.species.generation]) : undefined,
+    ]);
+
+    const moves = await PokedexRepo.prismaClient.pokedex_Move.findMany({
+        where: {
+            name: { in: pokemon.moves.map((move) => move) },
+        },
+    });
+
     return (
         <>
             <PokemonSpotlight pokemon={pokemon} />
@@ -38,15 +49,13 @@ export default async function PokemonPage({ params }: PageProps) {
                             <PokemonAbout pokemon={pokemon} />
                         </div>
                         <div>
-                            {/* @ts-expect-error Async Server Component */}
-                            <PokemonBaseStats pokemon={pokemon} />
+                            <PokemonBaseStats pokemon={pokemon} stats={{ overall, generation }} />
                         </div>
                         <div>
                             <PokemonEvolutionChain pokemon={pokemon} />
                         </div>
                         <div>
-                            {/* @ts-expect-error Async Server Component */}
-                            <PokemonMoves pokemon={pokemon} />
+                            <PokemonMoves pokemon={pokemon} moves={moves} />
                         </div>
                     </Tabs>
                 </div>
