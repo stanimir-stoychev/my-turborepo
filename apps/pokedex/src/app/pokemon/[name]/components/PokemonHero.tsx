@@ -41,3 +41,21 @@ export const PokemonHero: React.FC<{ pokemon: NonNullable<TPokedexRepoPokemon> }
         </div>
     </div>
 );
+
+export const PokemonHeroSkeleton: React.FC = () => (
+    <div className="space-y-4 prose text-inherit animate-pulse">
+        <div className="flex flex-wrap items-end justify-between gap-x-2 gap-y-2">
+            <div className="rounded h-9 w-36 bg-neutral-content" />
+            <div className="w-10 h-5 rounded bg-neutral-content" />
+        </div>
+
+        <div className="flex flex-wrap gap-y-2 gap-x-2">
+            <span className="block w-16 capitalize transition-shadow border-none bg-neutral-content badge bold" />
+            <span className="block w-16 capitalize transition-shadow border-none bg-neutral-content badge bold" />
+        </div>
+
+        <div className="flex items-center justify-center mt-12">
+            <div className="w-64 h-64 rounded-full bg-neutral-content" />
+        </div>
+    </div>
+);

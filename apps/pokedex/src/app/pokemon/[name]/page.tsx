@@ -27,7 +27,7 @@ export default async function PokemonPage({ params }: PageProps) {
     return (
         <>
             <PokemonSpotlight pokemon={pokemon} />
-            <div
+            <main
                 className="container flex flex-col items-center h-full p-4 pb-0 mx-auto"
                 style={{ color: pokemon.picturePalette?.primary?.base.text }}
             >
@@ -50,7 +50,7 @@ export default async function PokemonPage({ params }: PageProps) {
                         </div>
                     </Tabs>
                 </div>
-            </div>
+            </main>
         </>
     );
 }
