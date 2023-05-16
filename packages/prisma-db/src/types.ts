@@ -99,6 +99,7 @@ export type TPokemon = TPokemonStats & {
 export type TType = {
     id: number;
     name: string;
+    color: string;
 
     doubleDamageTo: string[];
     doubleDamageFrom: string[];

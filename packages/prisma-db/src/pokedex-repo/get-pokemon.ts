@@ -95,11 +95,18 @@ export const getPokemonByNameOrId = async (name: number | string) => {
             moves: {
                 select: {
                     name: true,
+                    type: {
+                        select: {
+                            name: true,
+                            color: true,
+                        },
+                    },
                 },
             },
             types: {
                 select: {
                     name: true,
+                    color: true,
                 },
             },
         },

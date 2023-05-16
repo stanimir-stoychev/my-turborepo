@@ -1,4 +1,5 @@
 import { ChainLink } from 'pokenode-ts';
+import { ArrayUtils } from 'general-utils';
 import {
     TPokemon,
     TSpecies,
@@ -14,6 +15,7 @@ import {
 
 import { PictureDescriptor } from './PictureDescriptor';
 import { mainClient } from './constants';
+import chroma from 'chroma-js';
 
 export const describeAbility = async (name: number | string) => {
     const nodeAbility = await (typeof name === 'string'
@@ -212,9 +214,32 @@ export const describeType = async (name: number | string) => {
 
     if (!nodeType) return null;
 
+    const color = await Promise.all(
+        nodeType.pokemon.map((pokemon) =>
+            mainClient.pokemon
+                .getPokemonSpeciesByName(pokemon.pokemon.name)
+                .then(({ color }) => mainClient.pokemon.getPokemonColorByName(color.name))
+                .catch(() => null),
+        ),
+    )
+        .then(ArrayUtils.removeFalsyValues)
+        .then((nodeColors) => {
+            if (!nodeColors.length) return '';
+
+            const colors = nodeColors.map((color) => color.name);
+            const average = chroma.average(
+                colors,
+                'lch',
+                colors.map(() => 1),
+            );
+
+            return average.hex();
+        });
+
     const type: TType = {
         id: nodeType.id,
         name: nodeType.name,
+        color,
 
         doubleDamageTo: nodeType.damage_relations.double_damage_to.map((type) => type.name),
         doubleDamageFrom: nodeType.damage_relations.double_damage_from.map((type) => type.name),
