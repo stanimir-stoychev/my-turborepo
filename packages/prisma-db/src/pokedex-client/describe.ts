@@ -206,6 +206,29 @@ export const describeEvolutionChain = async (id: number | string) => {
     return evolutionChain;
 };
 
+const preDefinedTypeColors: Record<string, string> = {
+    normal: '#f9eae1',
+    fire: '#c62020',
+    fighting: '#f38721',
+    flying: '#dff2f3',
+    poison: '#4ef35f',
+    ground: '#7d4f44',
+    rock: '#969f9e',
+    bug: '#0d982f',
+    ghost: '#f3f3f3',
+    steel: '#c0cace',
+    water: '#0097D8',
+    grass: '#20C795',
+    electric: '#F2D94E',
+    psychic: '#F2A2E1',
+    ice: '#AEE3FB',
+    dragon: '#F2A2A2',
+    dark: '#49292F',
+    fairy: '#F5D6EE',
+    unknown: '#D8D5D5',
+    shadow: '#272727',
+};
+
 export const describeType = async (name: number | string) => {
     const nodeType = await (typeof name === 'string'
         ? mainClient.pokemon.getTypeByName(name)
@@ -214,32 +237,10 @@ export const describeType = async (name: number | string) => {
 
     if (!nodeType) return null;
 
-    const color = await Promise.all(
-        nodeType.pokemon.map((pokemon) =>
-            mainClient.pokemon
-                .getPokemonSpeciesByName(pokemon.pokemon.name)
-                .then(({ color }) => mainClient.pokemon.getPokemonColorByName(color.name))
-                .catch(() => null),
-        ),
-    )
-        .then(ArrayUtils.removeFalsyValues)
-        .then((nodeColors) => {
-            if (!nodeColors.length) return '';
-
-            const colors = nodeColors.map((color) => color.name);
-            const average = chroma.average(
-                colors,
-                'lch',
-                colors.map(() => 1),
-            );
-
-            return average.hex();
-        });
-
     const type: TType = {
         id: nodeType.id,
         name: nodeType.name,
-        color,
+        color: preDefinedTypeColors[nodeType.name] ?? '',
 
         doubleDamageTo: nodeType.damage_relations.double_damage_to.map((type) => type.name),
         doubleDamageFrom: nodeType.damage_relations.double_damage_from.map((type) => type.name),
