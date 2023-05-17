@@ -20,14 +20,10 @@ export const searchPokemon = async (query: TSearchPokemonQuery) => {
                 name: true,
                 picture: true,
                 picturePalette: true,
-                moves: {
-                    select: {
-                        name: true,
-                    },
-                },
                 types: {
                     select: {
                         name: true,
+                        color: true,
                     },
                 },
             },
@@ -39,13 +35,7 @@ export const searchPokemon = async (query: TSearchPokemonQuery) => {
             nextCursor: rawResults.pop()!.name,
         }),
         total,
-        results: rawResults.map((pokemon) =>
-            PokedexRepoHelpers.toJsonPokemon({
-                ...pokemon,
-                moves: pokemon.moves.map((move) => move.name),
-                types: pokemon.types.map((type) => type.name),
-            }),
-        ),
+        results: rawResults.map((pokemon) => PokedexRepoHelpers.toJsonPokemon(pokemon)),
     };
 };
 
@@ -116,8 +106,6 @@ export const getPokemonByNameOrId = async (name: number | string) => {
     return PokedexRepoHelpers.toJsonPokemon({
         ...pokemon,
         abilities: pokemon.abilities.map((ability) => ability.name),
-        moves: pokemon.moves.map((move) => move.name),
-        types: pokemon.types.map((type) => type.name),
         species: pokemon.species
             ? {
                   ...pokemon.species,
