@@ -1,6 +1,9 @@
 import NextImage from 'next/image';
+import NextLink from 'next/link';
 
+import { StringUtils } from 'general-utils';
 import { TPokedexRepoPokemon } from 'prisma-db';
+import { AwesomeIcon } from '@/components';
 
 export function PokemonEvolutionChain({ pokemon }: { pokemon: TPokedexRepoPokemon }) {
     const evolutionChain = pokemon.species?.evolutionChain ?? [];
@@ -21,19 +24,26 @@ export function PokemonEvolutionChain({ pokemon }: { pokemon: TPokedexRepoPokemo
         });
 
     return (
-        <ul className="flex flex-col gap-y-4">
-            <li>Evolution Chain</li>
+        <ul className="flex flex-col p-0 m-0 gap-y-4">
             {evolutions.map((evolution, index) => (
-                <li key={index} className="flex justify-evenly gap-x-4">
+                <li key={index} className="flex p-0 m-0 justify-evenly gap-x-4">
                     {evolution.map((pkmn, index) => {
                         if (!pkmn) return null;
                         return (
                             <>
-                                {index > 0 && <div />}
-                                <div key={pkmn.name}>
+                                {index > 0 && (
+                                    <div className="flex items-center justify-center">
+                                        <AwesomeIcon icon="angles-right" className="text-neutral-content" size="lg" />
+                                    </div>
+                                )}
+                                <NextLink
+                                    key={pkmn.name}
+                                    href={`/pokemon/${pkmn.name}`}
+                                    className="transition-all scale-90 hover:scale-100 tooltip"
+                                    data-tip={StringUtils.capitalize(pkmn.name)}
+                                >
                                     <NextImage src={pkmn.src} alt={pkmn.src} height={96} width={96} />
-                                    <span>{pkmn.name}</span>
-                                </div>
+                                </NextLink>
                             </>
                         );
                     })}
