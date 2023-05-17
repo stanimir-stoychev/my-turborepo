@@ -38,22 +38,22 @@ export function PokemonBaseStats({ pokemon, stats }: TPokemonBaseStatsProps) {
     };
 
     return (
-        <section className="flex flex-col gap-y-2">
+        <ul className="flex flex-col p-0 m-0 gap-y-2">
             {[...baseStatsArray, totalStat].map((stat) => (
-                <div
+                <li
                     key={stat.label}
-                    className="flex items-baseline tooltip gap-x-2"
+                    className="flex items-baseline p-0 m-0 tooltip gap-x-2"
                     data-tip={`Highest: ${stat.highest}, Avg: ${format(stat.avg)}, Lowest: ${format(stat.lowest)}`}
                 >
                     <span className="flex-grow-0 text-start flex-1/3">{stat.label}</span>
-                    <span className="text-lg font-semibold">{stat.value}</span>
+                    <span className="text-lg font-semibold w-14">{stat.value}</span>
                     <progress
                         className={`h-3 progress ${stat.value >= stat.avg ? 'progress-success' : 'progress-error'}`}
                         value={stat.value}
                         max={stat.highest + stat.offset}
                     />
-                </div>
+                </li>
             ))}
-        </section>
+        </ul>
     );
 }

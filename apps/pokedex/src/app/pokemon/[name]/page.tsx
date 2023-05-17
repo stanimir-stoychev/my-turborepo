@@ -29,12 +29,6 @@ export default async function PokemonPage({ params }: PageProps) {
         pokemon.species?.generation ? PokedexRepo.getPokemonBaseStatsMarkers([pokemon.species.generation]) : undefined,
     ]);
 
-    const moves = await PokedexRepo.prismaClient.pokedex_Move.findMany({
-        where: {
-            name: { in: pokemon.moves.map((move) => move) },
-        },
-    });
-
     return (
         <>
             <PokemonSpotlight pokemon={pokemon} />
@@ -43,8 +37,8 @@ export default async function PokemonPage({ params }: PageProps) {
                 style={{ color: pokemon.picturePalette?.primary?.base.text }}
             >
                 <PokemonHero pokemon={pokemon} />
-                <div className="flex flex-col pb-4 mb-6 gap-y-6">
-                    <Tabs tabs={['About', 'Base Stats', 'Evolution', 'Moves']}>
+                <div className="flex flex-col p-4 pb-6 mb-6 prose rounded-lg gap-y-6 bg-neutral">
+                    <Tabs tabs={['About', 'Stats', 'Evolution', 'Moves']}>
                         <div>
                             <PokemonAbout pokemon={pokemon} />
                         </div>
@@ -55,7 +49,7 @@ export default async function PokemonPage({ params }: PageProps) {
                             <PokemonEvolutionChain pokemon={pokemon} />
                         </div>
                         <div>
-                            <PokemonMoves pokemon={pokemon} moves={moves} />
+                            <PokemonMoves moves={pokemon.moves} />
                         </div>
                     </Tabs>
                 </div>

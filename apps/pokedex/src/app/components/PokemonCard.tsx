@@ -16,9 +16,13 @@ export const PokemonCard: React.FC<{ pokemon: TPokedexRepoSearchResults['results
     >
         <h3 className="block capitalize">{pokemon.name}</h3>
 
-        {pokemon.types.map((type: string) => (
-            <span key={type} className="block capitalize border-none shadow-md badge bold">
-                {type}
+        {pokemon.types.map(({ color, name }) => (
+            <span
+                key={name}
+                className="block capitalize border-none shadow-md badge bold"
+                style={{ background: color && `linear-gradient(-25deg, ${color}, 5%, transparent)` }}
+            >
+                {name}
             </span>
         ))}
 

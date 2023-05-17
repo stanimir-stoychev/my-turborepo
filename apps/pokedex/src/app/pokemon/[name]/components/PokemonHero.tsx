@@ -1,4 +1,5 @@
 import NextImage from 'next/image';
+import chroma from 'chroma-js';
 
 import { TPokedexRepoPokemon } from 'prisma-db';
 import { StringUtils } from 'general-utils';
@@ -22,9 +23,18 @@ export const PokemonHero: React.FC<{ pokemon: NonNullable<TPokedexRepoPokemon> }
             <span className="text-inherit">{`#${StringUtils.padNumber(pokemon.id ?? 0, 3)}`}</span>
         </div>
         <div className="flex flex-wrap gap-y-2 gap-x-2">
-            {pokemon?.types.map((type: string) => (
-                <span key={type} className="block capitalize transition-shadow border-none badge bold">
-                    {type}
+            {pokemon?.types.map(({ color, name }) => (
+                <span
+                    key={name}
+                    className="block capitalize transition-shadow border-none shadow-md badge bold"
+                    style={{
+                        ...(color && {
+                            background: `linear-gradient(-25deg, ${color}, 5%, transparent)`,
+                            color: chroma(color).luminance() > 0.5 ? 'black' : 'white',
+                        }),
+                    }}
+                >
+                    {name}
                 </span>
             ))}
         </div>
