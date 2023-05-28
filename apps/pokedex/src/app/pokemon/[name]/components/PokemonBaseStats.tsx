@@ -1,96 +1,59 @@
-import { PokedexRepo, TPokedexRepoPokemon } from 'prisma-db';
+import { TPokedexRepoPokemon, TPokedexRepoPokemonBaseStatsMarkers } from 'prisma-db';
 
-export async function PokemonBaseStats({ pokemon }: { pokemon: TPokedexRepoPokemon }) {
-    const baseStatsMarkers = await PokedexRepo.getPokemonBaseStatsMarkers();
-    const generationBaseStatsMarkers = pokemon.species?.generation
-        ? await PokedexRepo.getPokemonBaseStatsMarkers([pokemon.species.generation])
-        : baseStatsMarkers;
+type TPokemonBaseStatsProps = {
+    pokemon: TPokedexRepoPokemon;
+    stats: {
+        overall: TPokedexRepoPokemonBaseStatsMarkers;
+        generation?: TPokedexRepoPokemonBaseStatsMarkers;
+    };
+};
 
-    const total = pokemon.hp + pokemon.attack + pokemon.defense + pokemon.spAttack + pokemon.spDefense + pokemon.speed;
-    const maxTotal =
-        Object.entries(baseStatsMarkers)
-            .filter(([key, value]) => !key.includes('average'))
-            .map(([key, value]) => value)
-            .reduce((acc, stat) => acc + stat, 0) + 60;
+export function PokemonBaseStats({ pokemon, stats }: TPokemonBaseStatsProps) {
+    const { format } = Intl.NumberFormat('en-US', { maximumFractionDigits: 2 });
+    const statsArr = [
+        ['HP', 'hp'] as const,
+        ['Attack', 'attack'] as const,
+        ['Defense', 'defense'] as const,
+        ['Sp. Atk', 'spAttack'] as const,
+        ['Sp. Def', 'spDefense'] as const,
+        ['Speed', 'speed'] as const,
+    ] as const;
 
-    const avgTotal = Object.entries(baseStatsMarkers)
-        .filter(([key, value]) => key.includes('average'))
-        .map(([key, value]) => value)
-        .reduce((acc, stat) => acc + stat, 0);
+    const baseStatsArray = statsArr.map(([label, key]) => ({
+        label,
+        value: pokemon[key],
+        highest: stats.overall.highest[key],
+        offset: 10,
+        avg: stats.overall.average[key],
+        lowest: stats.overall.lowest[key],
+    }));
 
-    const maxStats = {
-        hp: baseStatsMarkers.highestHp + 10,
-        // hp: generationBaseStatsMarkers.highestHp + 10,
-        attack: baseStatsMarkers.highestAttack + 10,
-        // attack: generationBaseStatsMarkers.highestAttack + 10,
-        defense: baseStatsMarkers.highestDefense + 10,
-        // defense: generationBaseStatsMarkers.highestDefense + 10,
-        spAttack: baseStatsMarkers.highestSpAttack + 10,
-        // spAttack: generationBaseStatsMarkers.highestSpAttack + 10,
-        spDefense: baseStatsMarkers.highestSpDefense + 10,
-        // spDefense: generationBaseStatsMarkers.highestSpDefense + 10,
-        speed: baseStatsMarkers.highestSpeed + 10,
-        // speed: generationBaseStatsMarkers.highestSpeed + 10,
+    const totalStat = {
+        label: 'Total',
+        value: statsArr.reduce((acc, [label, key]) => acc + pokemon[key], 0),
+        highest: Object.values(stats.overall.highest).reduce((acc, stat) => acc + stat, 0),
+        offset: 60,
+        avg: Object.values(stats.overall.average).reduce((acc, stat) => acc + stat, 0),
+        lowest: Object.values(stats.overall.lowest).reduce((acc, stat) => acc + stat, 0),
     };
 
-    const stats = [
-        {
-            label: 'HP',
-            value: pokemon.hp,
-            max: maxStats.hp,
-            avg: baseStatsMarkers.averageHp,
-        },
-        {
-            label: 'Attack',
-            value: pokemon.attack,
-            max: maxStats.attack,
-            avg: baseStatsMarkers.averageAttack,
-        },
-        {
-            label: 'Defense',
-            value: pokemon.defense,
-            max: maxStats.defense,
-            avg: baseStatsMarkers.averageDefense,
-        },
-        {
-            label: 'Sp. Atk',
-            value: pokemon.spAttack,
-            max: maxStats.spAttack,
-            avg: baseStatsMarkers.averageSpAttack,
-        },
-        {
-            label: 'Sp. Def',
-            value: pokemon.spDefense,
-            max: maxStats.spDefense,
-            avg: baseStatsMarkers.averageSpDefense,
-        },
-        {
-            label: 'Speed',
-            value: pokemon.speed,
-            max: maxStats.speed,
-            avg: baseStatsMarkers.averageSpeed,
-        },
-        { label: 'Total', value: total, max: maxTotal, avg: avgTotal },
-    ];
-    const { format } = Intl.NumberFormat('en-US', { maximumFractionDigits: 2 });
-
     return (
-        <section className="flex flex-col gap-y-2">
-            {stats.map(({ label, value, max, avg }) => (
-                <div
-                    key={label}
-                    className="flex items-baseline tooltip gap-x-2"
-                    data-tip={`(Global) Max: ${max}, Avg: ${format(avg)}`}
+        <ul className="flex flex-col p-0 m-0 gap-y-2">
+            {[...baseStatsArray, totalStat].map((stat) => (
+                <li
+                    key={stat.label}
+                    className="flex items-baseline p-0 m-0 tooltip gap-x-2"
+                    data-tip={`Highest: ${stat.highest}, Avg: ${format(stat.avg)}, Lowest: ${format(stat.lowest)}`}
                 >
-                    <span className="flex-grow-0 text-start flex-1/3">{label}</span>
-                    <span className="text-lg font-semibold">{value}</span>
+                    <span className="flex-grow-0 text-start flex-1/3">{stat.label}</span>
+                    <span className="text-lg font-semibold w-14">{stat.value}</span>
                     <progress
-                        className={`h-3 progress ${value >= avg ? 'progress-success' : 'progress-error'}`}
-                        value={value}
-                        max={max}
+                        className={`h-3 progress ${stat.value >= stat.avg ? 'progress-success' : 'progress-error'}`}
+                        value={stat.value}
+                        max={stat.highest + stat.offset}
                     />
-                </div>
+                </li>
             ))}
-        </section>
+        </ul>
     );
 }

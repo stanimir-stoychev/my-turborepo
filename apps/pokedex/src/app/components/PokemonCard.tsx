@@ -16,9 +16,13 @@ export const PokemonCard: React.FC<{ pokemon: TPokedexRepoSearchResults['results
     >
         <h3 className="block capitalize">{pokemon.name}</h3>
 
-        {pokemon.types.map((type: string) => (
-            <span key={type} className="block capitalize border-none shadow-md badge bold">
-                {type}
+        {pokemon.types.map(({ color, name }) => (
+            <span
+                key={name}
+                className="block capitalize border-none shadow-md badge bold"
+                style={{ background: color && `linear-gradient(-25deg, ${color}, 5%, transparent)` }}
+            >
+                {name}
             </span>
         ))}
 
@@ -32,4 +36,17 @@ export const PokemonCard: React.FC<{ pokemon: TPokedexRepoSearchResults['results
             />
         )}
     </NextLink>
+);
+
+export const PokemonCardSkeletons: React.FC<{ length?: number }> = ({ length = 10 }) => (
+    <>
+        {Array.from({ length }, (_, index) => (
+            <div key={index} className="relative h-48 p-4 space-y-2 rounded bg-neutral animate-pulse">
+                <div className="w-32 h-6 rounded bg-neutral-focus" />
+                <div className="w-16 h-6 rounded bg-neutral-focus" />
+                <div className="w-16 h-6 rounded bg-neutral-focus" />
+                <div className="absolute w-24 h-24 rounded bottom-2 right-2 bg-neutral-focus" />
+            </div>
+        ))}
+    </>
 );

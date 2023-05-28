@@ -18,6 +18,7 @@
         "chroma-js": "^2.4.2",
         "clsx": "^1.2.1",
         "daisyui": "^2.51.6",
+        "general-utils": "workspace:*",
         "next": "13.4.1",
         "prisma-db": "workspace:*",
         "react": "18.2.0",

@@ -20,14 +20,10 @@ export const searchPokemon = async (query: TSearchPokemonQuery) => {
                 name: true,
                 picture: true,
                 picturePalette: true,
-                moves: {
-                    select: {
-                        name: true,
-                    },
-                },
                 types: {
                     select: {
                         name: true,
+                        color: true,
                     },
                 },
             },
@@ -39,13 +35,7 @@ export const searchPokemon = async (query: TSearchPokemonQuery) => {
             nextCursor: rawResults.pop()!.name,
         }),
         total,
-        results: rawResults.map((pokemon) =>
-            PokedexRepoHelpers.toJsonPokemon({
-                ...pokemon,
-                moves: pokemon.moves.map((move) => move.name),
-                types: pokemon.types.map((type) => type.name),
-            }),
-        ),
+        results: rawResults.map((pokemon) => PokedexRepoHelpers.toJsonPokemon(pokemon)),
     };
 };
 
@@ -67,7 +57,9 @@ export const getPokemonByNameOrId = async (name: number | string) => {
                         include: {
                             species: {
                                 select: {
+                                    id: true,
                                     name: true,
+                                    evolvesTo: true,
                                     pokemon: {
                                         select: {
                                             picture: true,
@@ -93,11 +85,18 @@ export const getPokemonByNameOrId = async (name: number | string) => {
             moves: {
                 select: {
                     name: true,
+                    type: {
+                        select: {
+                            name: true,
+                            color: true,
+                        },
+                    },
                 },
             },
             types: {
                 select: {
                     name: true,
+                    color: true,
                 },
             },
         },
@@ -107,8 +106,6 @@ export const getPokemonByNameOrId = async (name: number | string) => {
     return PokedexRepoHelpers.toJsonPokemon({
         ...pokemon,
         abilities: pokemon.abilities.map((ability) => ability.name),
-        moves: pokemon.moves.map((move) => move.name),
-        types: pokemon.types.map((type) => type.name),
         species: pokemon.species
             ? {
                   ...pokemon.species,
@@ -124,89 +121,84 @@ export const getPokemonByNameOrId = async (name: number | string) => {
     });
 };
 
-export const getPokemonBaseStatsMarkers = async (generations?: string[]) => {
-    const where = {
-        where: {
-            species: {
-                generation: {
-                    name: { in: generations },
+export const getPokemonBaseStatsMarkers = (generations?: string[]) =>
+    prismaClient.$transaction(async (prisma) => {
+        const stats = ['attack', 'defense', 'hp', 'spAttack', 'spDefense', 'speed'] as const;
+        const where = {
+            ...(generations?.length && {
+                where: {
+                    species: {
+                        generation: {
+                            name: { in: generations },
+                        },
+                    },
                 },
-            },
-        },
-    };
+            }),
+        };
 
-    const findHighestStat = (stat: string) =>
-        prismaClient.pokedex_Pokemon.findMany({
-            orderBy: { [stat]: 'desc' },
-            select: { [stat]: true },
-            take: 1,
-            ...where,
-        });
+        const findHighestStat = (stat: string) =>
+            prisma.pokedex_Pokemon.findMany({
+                orderBy: { [stat]: 'desc' },
+                select: { [stat]: true },
+                take: 1,
+                ...where,
+            });
 
-    const findAverageStat = (stat: string) =>
-        prismaClient.pokedex_Pokemon.aggregate({
-            _avg: { [stat]: true },
-            ...where,
-        });
+        const findAverageStat = (stat: string) =>
+            prisma.pokedex_Pokemon.aggregate({
+                _avg: { [stat]: true },
+                ...where,
+            });
 
-    const [
-        [{ attack: highestAttack }],
-        [{ defense: highestDefense }],
-        [{ hp: highestHp }],
-        [{ spAttack: highestSpAttack }],
-        [{ spDefense: highestSpDefense }],
-        [{ speed: highestSpeed }],
+        const findLowestStat = (stat: string) =>
+            prisma.pokedex_Pokemon.findMany({
+                orderBy: { [stat]: 'asc' },
+                select: { [stat]: true },
+                take: 1,
+                ...where,
+            });
 
-        {
-            _avg: { attack: averageAttack },
-        },
-        {
-            _avg: { defense: averageDefense },
-        },
-        {
-            _avg: { hp: averageHp },
-        },
-        {
-            _avg: { spAttack: averageSpAttack },
-        },
-        {
-            _avg: { spDefense: averageSpDefense },
-        },
-        {
-            _avg: { speed: averageSpeed },
-        },
-    ] = await prismaClient.$transaction([
-        findHighestStat('attack'),
-        findHighestStat('defense'),
-        findHighestStat('hp'),
-        findHighestStat('spAttack'),
-        findHighestStat('spDefense'),
-        findHighestStat('speed'),
+        const [highest, average, lowest] = await Promise.all([
+            Promise.all(
+                stats.map(async (stat) => {
+                    const results = await findHighestStat(stat);
+                    return { stat, results };
+                }),
+            ).then((resultsAsArray) => {
+                return resultsAsArray.reduce((acc, { stat, results }) => {
+                    return { ...acc, [stat]: results[0][stat] };
+                }, {} as Record<'attack' | 'defense' | 'hp' | 'spAttack' | 'spDefense' | 'speed', number>);
+            }),
 
-        findAverageStat('attack'),
-        findAverageStat('defense'),
-        findAverageStat('hp'),
-        findAverageStat('spAttack'),
-        findAverageStat('spDefense'),
-        findAverageStat('speed'),
-    ]);
+            Promise.all(
+                stats.map(async (stat) => {
+                    const results = await findAverageStat(stat);
+                    return { stat, results };
+                }),
+            ).then((resultsAsArray) => {
+                return resultsAsArray.reduce((acc, { stat, results }) => {
+                    return { ...acc, [stat]: results._avg[stat] };
+                }, {} as Record<'attack' | 'defense' | 'hp' | 'spAttack' | 'spDefense' | 'speed', number>);
+            }),
 
-    return {
-        highestAttack: highestAttack as number,
-        highestDefense: highestDefense as number,
-        highestHp: highestHp as number,
-        highestSpAttack: highestSpAttack as number,
-        highestSpDefense: highestSpDefense as number,
-        highestSpeed: highestSpeed as number,
+            Promise.all(
+                stats.map(async (stat) => {
+                    const results = await findLowestStat(stat);
+                    return { stat, results };
+                }),
+            ).then((resultsAsArray) => {
+                return resultsAsArray.reduce((acc, { stat, results }) => {
+                    return { ...acc, [stat]: results[0][stat] };
+                }, {} as Record<'attack' | 'defense' | 'hp' | 'spAttack' | 'spDefense' | 'speed', number>);
+            }),
+        ]);
 
-        averageAttack: averageAttack as number,
-        averageDefense: averageDefense as number,
-        averageHp: averageHp as number,
-        averageSpAttack: averageSpAttack as number,
-        averageSpDefense: averageSpDefense as number,
-        averageSpeed: averageSpeed as number,
-    };
-};
+        return {
+            average,
+            highest,
+            lowest,
+        };
+    });
 
 const fetchSpecies = async (prisma: Partial<typeof prismaClient> = prismaClient, species: string) =>
     prisma.pokedex_Species?.findFirst({

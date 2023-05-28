@@ -84,7 +84,8 @@ model Pokedex_Type {
   updatedAt DateTime @updatedAt
 
   // basic data
-  name String @unique
+  name  String @unique
+  color String @default("")
 
   // self relationships
   doubleDamageTo      Pokedex_Type[] @relation("DoubleDamageTo")

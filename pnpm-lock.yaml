@@ -61,6 +61,7 @@ importers:
       daisyui: ^2.51.6
       eslint: 8.40.0
       eslint-config-custom: workspace:*
+      general-utils: workspace:*
       next: 13.4.1
       postcss: 8.4.23
       prisma-db: workspace:*
@@ -83,6 +84,7 @@ importers:
       chroma-js: 2.4.2
       clsx: 1.2.1
       daisyui: 2.51.6_zmwpaxxolxfsc5pnrezed2bx24
+      general-utils: link:../../packages/general-utils
       next: 13.4.1_3j7hb26pwgm6spbxoejtjx6xja
       prisma-db: link:../../packages/prisma-db
       react: 18.2.0
@@ -147,10 +149,20 @@ importers:
       eslint: 7.32.0
       eslint-config-next: 13.0.0_jofidmxrjzhj7l6vknpw5ecvfe
       eslint-config-prettier: 8.8.0_eslint@7.32.0
-      eslint-config-turbo: 1.9.3_eslint@7.32.0
+      eslint-config-turbo: 1.9.6_eslint@7.32.0
       eslint-plugin-react: 7.31.8_eslint@7.32.0
     devDependencies:
       typescript: 4.9.5
+
+  packages/general-utils:
+    specifiers:
+      eslint-config-custom: workspace:*
+      tsconfig: workspace:*
+      typescript: ^5.0.4
+    devDependencies:
+      eslint-config-custom: link:../eslint-config-custom
+      tsconfig: link:../tsconfig
+      typescript: 5.0.4
 
   packages/prisma-db:
     specifiers:
@@ -162,6 +174,7 @@ importers:
       axios-cache-interceptor: ^1.0.1
       chroma-js: ^2.4.2
       eslint-config-custom: workspace:*
+      general-utils: workspace:*
       get-image-colors: ^4.0.1
       pokenode-ts: ^1.18.3
       prisma: ^4.13.0
@@ -178,6 +191,7 @@ importers:
       axios-cache-interceptor: 1.0.1_axios@1.4.0
       chroma-js: 2.4.2
       eslint-config-custom: link:../eslint-config-custom
+      general-utils: link:../general-utils
       get-image-colors: 4.0.1
       pokenode-ts: 1.18.3_zdw6srurt2rm7rhiucegedydfm
       prisma: 4.13.0
@@ -1950,13 +1964,13 @@ packages:
       eslint: 7.32.0
     dev: false
 
-  /eslint-config-turbo/1.9.3_eslint@7.32.0:
-    resolution: {integrity: sha512-QG6jxFQkrGSpQqlFKefPdtgUfr20EbU0s4tGGIuGFOcPuJEdsY6VYZpZUxNJvmMcTGqPgMyOPjAFBKhy/DPHLA==}
+  /eslint-config-turbo/1.9.6_eslint@7.32.0:
+    resolution: {integrity: sha512-ZIIfcUZ3kW8owIdC1ykebSGJOmVjUidOin1j7ZxpFDGSGcRc2/r5MBNQ7z347lsJs0rNXk/LpOiFHNbdtE+n6w==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:
       eslint: 7.32.0
-      eslint-plugin-turbo: 1.9.3_eslint@7.32.0
+      eslint-plugin-turbo: 1.9.6_eslint@7.32.0
     dev: false
 
   /eslint-import-resolver-node/0.3.7:
@@ -2107,8 +2121,8 @@ packages:
       string.prototype.matchall: 4.0.8
     dev: false
 
-  /eslint-plugin-turbo/1.9.3_eslint@7.32.0:
-    resolution: {integrity: sha512-ZsRtksdzk3v+z5/I/K4E50E4lfZ7oYmLX395gkrUMBz4/spJlYbr+GC8hP9oVNLj9s5Pvnm9rLv/zoj5PVYaVw==}
+  /eslint-plugin-turbo/1.9.6_eslint@7.32.0:
+    resolution: {integrity: sha512-xxa+gfTg3CG7wKJbkOIqdZw2eXhriORjw/55GDjJiUrNhU4vo1tA+9HDo/glTQygZ22Pj3nxYhxINFnQ/IU3lg==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:

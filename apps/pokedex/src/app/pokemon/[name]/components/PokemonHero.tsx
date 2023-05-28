@@ -1,7 +1,8 @@
 import NextImage from 'next/image';
+import chroma from 'chroma-js';
 
 import { TPokedexRepoPokemon } from 'prisma-db';
-import { StringUtils } from '@/utils';
+import { StringUtils } from 'general-utils';
 
 export const PokemonSpotlight: React.FC<{ pokemon: NonNullable<TPokedexRepoPokemon> }> = ({ pokemon }) => (
     <aside
@@ -22,9 +23,18 @@ export const PokemonHero: React.FC<{ pokemon: NonNullable<TPokedexRepoPokemon> }
             <span className="text-inherit">{`#${StringUtils.padNumber(pokemon.id ?? 0, 3)}`}</span>
         </div>
         <div className="flex flex-wrap gap-y-2 gap-x-2">
-            {pokemon?.types.map((type: string) => (
-                <span key={type} className="block capitalize transition-shadow border-none badge bold">
-                    {type}
+            {pokemon?.types.map(({ color, name }) => (
+                <span
+                    key={name}
+                    className="block capitalize transition-shadow border-none shadow-md badge bold"
+                    style={{
+                        ...(color && {
+                            background: `linear-gradient(-25deg, ${color}, 5%, transparent)`,
+                            color: chroma(color).luminance() > 0.5 ? 'black' : 'white',
+                        }),
+                    }}
+                >
+                    {name}
                 </span>
             ))}
         </div>
@@ -38,6 +48,24 @@ export const PokemonHero: React.FC<{ pokemon: NonNullable<TPokedexRepoPokemon> }
                     height={256}
                 />
             )}
+        </div>
+    </div>
+);
+
+export const PokemonHeroSkeleton: React.FC = () => (
+    <div className="space-y-4 prose text-inherit animate-pulse">
+        <div className="flex flex-wrap items-end justify-between gap-x-2 gap-y-2">
+            <div className="rounded h-9 w-36 bg-neutral-content" />
+            <div className="w-10 h-5 rounded bg-neutral-content" />
+        </div>
+
+        <div className="flex flex-wrap gap-y-2 gap-x-2">
+            <span className="block w-16 capitalize transition-shadow border-none bg-neutral-content badge bold" />
+            <span className="block w-16 capitalize transition-shadow border-none bg-neutral-content badge bold" />
+        </div>
+
+        <div className="flex items-center justify-center mt-12">
+            <div className="w-64 h-64 rounded-full bg-neutral-content" />
         </div>
     </div>
 );

@@ -38,6 +38,7 @@ export const createTypes = (types: TType[], generateAdditionalProps = defaultTyp
         data: types.map((type) => ({
             id: type.id,
             name: type.name,
+            color: type.color,
             ...generateAdditionalProps(type),
         })),
     });
