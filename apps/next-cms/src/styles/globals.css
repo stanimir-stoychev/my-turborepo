@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background-color-rgb: 242 245 248;
+        --error-color-rgb: 235 25 10;
+        --info-color-rgb: 35 116 171;
+        --primary-color-rgb: 255 71 96;
+        --secondary-color-rgb: 102 0 14;
+        --success-color-rgb: 16 168 56;
+        --text-color-rgb: 16 14 27;
+        --warning-color-rgb: 235 119 30;
+        --black-color-rgb: 16 14 27;
+        --white-color-rgb: 242 245 248;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color-rgb: 16 14 27;
+        --text-color-rgb: 242 245 248;
+    }
+}
+
+body {
+    background-color: rgb(var(--background-color-rgb));
+    color: rgb(var(--text-color-rgb));
+}
