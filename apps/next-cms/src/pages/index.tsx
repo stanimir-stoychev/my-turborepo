@@ -1,9 +1,5 @@
-import { AuthShowcase } from '~/components';
+import type { TNextPageWithLayout } from '~/types';
 
-export default function Home() {
-    return (
-        <main>
-            <AuthShowcase />
-        </main>
-    );
-}
+const Home: TNextPageWithLayout = () => <>Hello from the public website!</>;
+
+export default Home;
