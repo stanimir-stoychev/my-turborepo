@@ -1,27 +1,17 @@
 import { forwardRef } from 'react';
-import clsx from 'clsx';
-import type { ClassValue } from 'clsx';
 
-export type UiBoxComponent<ComponentProps = HTMLElement> =
-    | keyof JSX.IntrinsicElements
-    | React.ComponentType<ComponentProps>;
+export type TUiBoxProps<E extends HTMLElement = HTMLElement, CP = undefined> = {
+    component?: keyof JSX.IntrinsicElements | React.ComponentType<CP>;
+} & (CP extends undefined ? React.HtmlHTMLAttributes<E> : CP);
 
-export interface UiBoxProps<ComponentProps = HTMLElement>
-    extends Omit<React.DetailedHTMLProps<React.HTMLAttributes<ComponentProps>, ComponentProps>, 'className'> {
-    component?: UiBoxComponent<ComponentProps>;
-    className?: ClassValue;
-    children?: React.ReactNode;
-}
-
-export const UiBox = forwardRef<HTMLElement, UiBoxProps>(function UiBox(
-    { className, component = 'div', ...rest },
-    ref,
+function UiBoxInner<E extends HTMLElement, CP = React.HtmlHTMLAttributes<E>>(
+    { component = 'div', ...rest }: TUiBoxProps<E, CP>,
+    ref: React.ForwardedRef<E>,
 ) {
     const Root: React.ElementType = component;
-    const props = {
-        ...(className && { className: clsx(className) }),
-        ...rest,
-    };
+    return <Root ref={ref} {...rest} />;
+}
 
-    return <Root ref={ref} {...props} />;
-});
+export const UiBox = forwardRef(UiBoxInner) as <E extends HTMLElement, CP = React.HtmlHTMLAttributes<E>>(
+    props: TUiBoxProps<E, CP> & { ref?: React.ForwardedRef<E> },
+) => ReturnType<typeof UiBoxInner<E, CP>>;
