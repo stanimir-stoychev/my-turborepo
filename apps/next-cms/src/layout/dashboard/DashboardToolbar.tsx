@@ -24,7 +24,7 @@ function ToolbarLink({
                 )}
             />
             {tooltip && (
-                <div className="px-1 text-black -translate-y-1/2 rounded shadow-lg pointer-events-none top-1/2 bg-primary left-[120%] min-w-max group-hover:pointer-events-auto tooltip">
+                <div className="px-1 text-white -translate-y-1/2 rounded shadow-lg pointer-events-none top-1/2 bg-primary left-[120%] min-w-max group-hover:pointer-events-auto tooltip">
                     {tooltip}
                 </div>
             )}
@@ -57,7 +57,7 @@ function UserMenu() {
             ) : (
                 <AwesomeIcon icon="user" />
             )}
-            <span className="top-1/2 -translate-y-1/2 p-1 text-black rounded shadow-lg pointer-events-none bg-primary left-[120%] min-w-max group-hover:pointer-events-auto tooltip">
+            <span className="top-1/2 -translate-y-1/2 p-1 text-white rounded shadow-lg pointer-events-none bg-primary left-[120%] min-w-max group-hover:pointer-events-auto tooltip">
                 {data?.user?.name}
             </span>
         </Menu>

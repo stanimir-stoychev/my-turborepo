@@ -49,7 +49,7 @@ export function Menu({
                         tabIndex={0}
                         role="button"
                         className={clsx(
-                            'px-2 py-1 cursor-pointer focus:bg-black/5 hover:bg-black/5 text-black min-w-max transition-colors',
+                            'px-2 py-1 focus:bg-black/5 hover:bg-black/5 text-black min-w-max transition-colors',
                             className,
                         )}
                         onClick={(event) => {

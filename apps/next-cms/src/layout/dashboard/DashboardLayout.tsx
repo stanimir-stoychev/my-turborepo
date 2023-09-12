@@ -9,7 +9,7 @@ export function DashboardLayout({ children }: React.PropsWithChildren) {
     }
 
     return (
-        <div className="flex w-screen h-screen gap-1">
+        <div className="flex w-screen h-screen gap-2">
             <DashboardToolbar />
             <main data-testid="dashboard-content" className="flex-1">
                 {children}
