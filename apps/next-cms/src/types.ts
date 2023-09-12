@@ -18,4 +18,5 @@ export type TPage = {
     description: string;
     image?: string;
     html: THtmlBlockProps;
+    previewHtml?: THtmlBlockProps;
 };

@@ -1,7 +1,8 @@
-import { forwardRef } from 'react';
+import { Fragment, forwardRef } from 'react';
 
 export type TUiBoxProps<E extends HTMLElement = HTMLElement, CP = undefined> = {
     component?: keyof JSX.IntrinsicElements | React.ComponentType<CP>;
+    children?: React.ReactNode;
 } & (CP extends undefined ? React.HtmlHTMLAttributes<E> : CP);
 
 function UiBoxInner<E extends HTMLElement, CP = React.HtmlHTMLAttributes<E>>(
@@ -9,10 +10,8 @@ function UiBoxInner<E extends HTMLElement, CP = React.HtmlHTMLAttributes<E>>(
     ref: React.ForwardedRef<E>,
 ) {
     const Root: React.ElementType = component;
-
-    console.log('UiBox', { component, rest, ref, Root });
-
-    return <Root ref={ref} {...rest} />;
+    const componentProps = Root === Fragment ? { children: rest.children } : rest;
+    return <Root ref={ref} {...componentProps} />;
 }
 
 export const UiBox = forwardRef(UiBoxInner) as <E extends HTMLElement, CP = React.HtmlHTMLAttributes<E>>(

@@ -8,6 +8,13 @@ const DEMO_PAGE: TPage = {
     id: 'this-is-a-demo-page',
     title: 'Hello World',
     description: 'This is a description',
+    previewHtml: {
+        children: [
+            { component: 'h1', children: 'This is a heading' },
+            { component: 'hr', className: 'my-2' },
+            { component: 'p', children: 'This is a paragraph from the preview HTML' },
+        ],
+    },
     html: {
         component: 'div',
         className: 'flex flex-col gap-2',
@@ -36,6 +43,13 @@ const DEMO_PAGE: TPage = {
     },
 };
 
+const DEMO_PAGES_ARR: TPage[] = Array.from({ length: 1000 }, (_, i) => ({
+    ...DEMO_PAGE,
+    id: `demo-page-${i}`,
+    ...(i % 2 === 0 ? { image: 'https://picsum.photos/seed/picsum/800/600' } : {}),
+    ...(i % 5 === 0 ? { image: '/pikachu.jpeg' } : {}),
+}));
+
 export const pageRouter = createTRPCRouter({
     create: publicProcedure
         .input(
@@ -49,6 +63,24 @@ export const pageRouter = createTRPCRouter({
                 title: input.title,
                 description: input.description,
             };
+        }),
+
+    getPagesArray: publicProcedure
+        .input(
+            z
+                .object({
+                    page: z.number().default(1),
+                    limit: z.number().default(10),
+                })
+                .optional(),
+        )
+        .query(({ input }) => {
+            const { page = 1, limit = 10 } = input ?? {};
+
+            const start = (page - 1) * limit;
+            const end = start + limit;
+
+            return DEMO_PAGES_ARR.slice(start, end);
         }),
 
     getPage: publicProcedure.input(z.string()).query(({ input }): TPage => {
