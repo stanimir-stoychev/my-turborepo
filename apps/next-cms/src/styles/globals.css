@@ -28,3 +28,15 @@ body {
     background-color: rgb(var(--background-color-rgb));
     color: rgb(var(--text-color-rgb));
 }
+
+.has-tooltip {
+    position: relative;
+}
+
+.tooltip {
+    @apply absolute invisible;
+}
+
+.has-tooltip:hover .tooltip {
+    @apply z-50 visible;
+}
