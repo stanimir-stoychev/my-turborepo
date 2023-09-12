@@ -92,6 +92,11 @@ importers:
 
   apps/next-cms:
     specifiers:
+      '@fortawesome/fontawesome-svg-core': ^6.4.0
+      '@fortawesome/free-brands-svg-icons': ^6.4.0
+      '@fortawesome/free-regular-svg-icons': ^6.4.0
+      '@fortawesome/free-solid-svg-icons': ^6.4.0
+      '@fortawesome/react-fontawesome': ^0.2.0
       '@t3-oss/env-nextjs': ^0.6.0
       '@tanstack/react-query': ^4.29.25
       '@trpc/client': ^10.34.0
@@ -105,6 +110,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^6.3.0
       '@typescript-eslint/parser': ^6.3.0
       autoprefixer: ^10.4.14
+      clsx: ^1.2.1
       eslint: ^8.47.0
       eslint-config-next: ^13.4.13
       next: ^13.4.13
@@ -112,22 +118,30 @@ importers:
       postcss: ^8.4.27
       react: 18.2.0
       react-dom: 18.2.0
+      react-use: ^17.4.0
       superjson: ^1.13.1
       tailwindcss: ^3.3.3
       tsconfig: workspace:*
       typescript: ^5.1.6
       zod: ^3.21.4
     dependencies:
+      '@fortawesome/fontawesome-svg-core': 6.4.0
+      '@fortawesome/free-brands-svg-icons': 6.4.0
+      '@fortawesome/free-regular-svg-icons': 6.4.0
+      '@fortawesome/free-solid-svg-icons': 6.4.0
+      '@fortawesome/react-fontawesome': 0.2.0_tumfstpptabomqiydababgzl3q
       '@t3-oss/env-nextjs': 0.6.1_4vjarjeahs5r4i4dbld6hjohfi
       '@tanstack/react-query': 4.35.0_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.38.1_@trpc+server@10.38.1
       '@trpc/next': 10.38.1_le3u3luirho2et33flranndek4
       '@trpc/react-query': 10.38.1_x52kaj4bem3pf2l5ghmkv6xp3i
       '@trpc/server': 10.38.1
+      clsx: 1.2.1
       next: 13.4.19_biqbaboplfbrettd7655fr4n2y
       next-auth: 4.23.1_m2l4knchnqa6bzxbbtfxlzoxdy
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-use: 17.4.0_biqbaboplfbrettd7655fr4n2y
       superjson: 1.13.1
       zod: 3.21.4
     devDependencies:
