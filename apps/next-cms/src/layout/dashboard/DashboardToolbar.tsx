@@ -18,10 +18,7 @@ function ToolbarLink({
             <AwesomeIcon
                 size="2x"
                 {...iconProps}
-                className={clsx(
-                    'transition-all group-hover:scale-110 group-hover:shadow-lg group-active:scale-110 group-active:shadow-lg group-focus:scale-110 group-focus:shadow-lg',
-                    iconProps.className,
-                )}
+                className={clsx('transition-all group-hover:scale-110 group-hover:shadow-lg', iconProps.className)}
             />
             {tooltip && (
                 <div className="px-1 text-white -translate-y-1/2 rounded shadow-lg pointer-events-none top-1/2 bg-primary left-[120%] min-w-max group-hover:pointer-events-auto tooltip">

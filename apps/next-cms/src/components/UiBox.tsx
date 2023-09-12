@@ -9,6 +9,9 @@ function UiBoxInner<E extends HTMLElement, CP = React.HtmlHTMLAttributes<E>>(
     ref: React.ForwardedRef<E>,
 ) {
     const Root: React.ElementType = component;
+
+    console.log('UiBox', { component, rest, ref, Root });
+
     return <Root ref={ref} {...rest} />;
 }
 

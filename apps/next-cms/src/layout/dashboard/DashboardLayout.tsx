@@ -11,7 +11,7 @@ export function DashboardLayout({ children }: React.PropsWithChildren) {
     return (
         <div className="flex w-screen h-screen gap-2">
             <DashboardToolbar />
-            <main data-testid="dashboard-content" className="flex-1">
+            <main data-testid="dashboard-content" className="flex-1 max-h-full overflow-auto">
                 {children}
             </main>
         </div>
