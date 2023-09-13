@@ -7,11 +7,34 @@
         --background-color-rgb: 242 245 248;
         --error-color-rgb: 235 25 10;
         --info-color-rgb: 35 116 171;
-        --primary-color-rgb: 49 128 135;
-        --secondary-color-rgb: 175 233 226;
         --success-color-rgb: 16 168 56;
         --text-color-rgb: 16 14 27;
         --warning-color-rgb: 235 119 30;
+
+        --primary-color-rgb: 49 128 135;
+        --primary-color-rgb-50: 255 255 255;
+        --primary-color-rgb-100: 231 245 246;
+        --primary-color-rgb-200: 207 235 238;
+        --primary-color-rgb-300: 183 225 229;
+        --primary-color-rgb-400: 159 215 220;
+        --primary-color-rgb-500: 135 205 212;
+        --primary-color-rgb-600: 111 195 203;
+        --primary-color-rgb-700: 88 186 194;
+        --primary-color-rgb-800: 66 173 183;
+        --primary-color-rgb-900: 58 151 159;
+
+        --secondary-color-rgb: 175 233 226;
+        --secondary-color-rgb-50: 255 255 255;
+        --secondary-color-rgb-100: 247 253 252;
+        --secondary-color-rgb-200: 239 251 249;
+        --secondary-color-rgb-300: 231 248 246;
+        --secondary-color-rgb-400: 223 246 243;
+        --secondary-color-rgb-500: 215 244 240;
+        --secondary-color-rgb-600: 207 242 238;
+        --secondary-color-rgb-700: 199 240 235;
+        --secondary-color-rgb-800: 191 237 232;
+        --secondary-color-rgb-900: 183 235 229;
+
         --black-color-rgb: 16 14 27;
         --white-color-rgb: 242 245 248;
     }
