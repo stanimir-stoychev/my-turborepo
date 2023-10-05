@@ -1,69 +1,60 @@
-import { createContext, useEffect } from 'react';
-import { useLocalStorage, useMedia, usePrevious } from 'react-use';
+import { createContext, useCallback, useEffect, useMemo } from 'react';
+import { useLocalStorage } from 'react-use';
+
+const supportedThemes = ['light', 'dark', 'forest', 'aqua', 'winter'] as const;
 
 type TThemeContext = {
-    theme: 'light' | 'dark';
-    setTheme: (theme: 'light' | 'dark') => void;
+    theme: (typeof supportedThemes)[number];
+    setTheme: (theme: TThemeContext['theme']) => void;
     removeTheme: () => void;
 };
 
-const ThemeContext = createContext<TThemeContext>({
-    theme: 'light',
+const DEFAULT_CONTEXT: TThemeContext = {
+    theme: 'forest',
     setTheme: () => undefined,
     removeTheme: () => undefined,
-});
+};
+
+const Context = createContext(DEFAULT_CONTEXT);
+Context.displayName = '(daisyui) Theme Context';
 
 export function ThemeProvider({ children }: React.PropsWithChildren) {
-    const userPrefersDarkTheme = useMedia('(prefers-color-scheme: dark)', false);
-    const [themeValue, setThemeValue, removeThemeValue] = useLocalStorage<TThemeContext['theme']>(
+    const [theme = DEFAULT_CONTEXT.theme, setThemeInLocalStorage, removeTheme] = useLocalStorage(
         'theme',
-        userPrefersDarkTheme ? 'dark' : 'light',
+        DEFAULT_CONTEXT.theme,
     );
 
-    const userUsedToPreferDarkTheme = usePrevious(userPrefersDarkTheme);
-
-    useEffect(() => {
-        if (themeValue !== 'dark' && themeValue !== 'light') {
-            setThemeValue(userPrefersDarkTheme ? 'dark' : 'light');
-        }
-    }, [setThemeValue, themeValue, userPrefersDarkTheme]);
-
-    useEffect(() => {
-        if (userPrefersDarkTheme !== userUsedToPreferDarkTheme) {
-            setThemeValue(userPrefersDarkTheme ? 'dark' : 'light');
-        }
-    }, [userPrefersDarkTheme, userUsedToPreferDarkTheme]);
-
-    useEffect(() => {
-        if (themeValue === 'dark') {
-            if (!document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.add('dark');
-            }
-        } else {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-            }
-        }
-    }, [themeValue]);
-
-    return (
-        <ThemeContext.Provider
-            value={{
-                theme: themeValue ?? 'light',
-                setTheme: setThemeValue,
-                removeTheme: removeThemeValue,
-            }}
-        >
-            {children}
-        </ThemeContext.Provider>
+    const setTheme = useCallback(
+        (newTheme = DEFAULT_CONTEXT.theme) => {
+            const nextTheme = supportedThemes.includes(newTheme) ? newTheme : DEFAULT_CONTEXT.theme;
+            setThemeInLocalStorage(nextTheme);
+        },
+        [setThemeInLocalStorage],
     );
+
+    const context = useMemo(
+        (): typeof DEFAULT_CONTEXT => ({
+            theme,
+            setTheme,
+            removeTheme,
+        }),
+        [theme, setTheme, removeTheme],
+    );
+
+    useEffect(() => {
+        if (document.documentElement.dataset.theme !== theme) {
+            document.documentElement.dataset.theme = theme;
+        }
+    }, [theme]);
+
+    return <Context.Provider value={context}>{children}</Context.Provider>;
 }
 
-export function withThemeProvider(Component: React.ComponentType) {
-    return function WithThemeProvider() {
+export function withThemeProvider<P>(Component: React.ComponentType<P>) {
+    return function WithThemeProvider(props: P & JSX.IntrinsicAttributes) {
         return (
             <ThemeProvider>
-                <Component />
+                <Component {...props} />
             </ThemeProvider>
         );
     };

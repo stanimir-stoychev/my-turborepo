@@ -36,7 +36,7 @@ function PagePreviewCard({
     );
 }
 
-const DashboardPagesHome: TNextPageWithLayout = () => {
+const DashboardPages: TNextPageWithLayout = () => {
     const { data } = api.page.getPagesArray.useQuery({ limit: 100 });
 
     return (
@@ -56,4 +56,4 @@ const DashboardPagesHome: TNextPageWithLayout = () => {
     );
 };
 
-export default DashboardPagesHome;
+export default DashboardPages;

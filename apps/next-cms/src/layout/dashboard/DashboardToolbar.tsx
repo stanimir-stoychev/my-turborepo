@@ -1,8 +1,8 @@
+import clsx from 'clsx';
 import NextLink from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
-import clsx from 'clsx';
 
-import { AwesomeIcon, Menu } from '~/components';
+import { AwesomeIcon } from '~/components';
 
 function ToolbarLink({
     className,
@@ -11,20 +11,19 @@ function ToolbarLink({
     ...rest
 }: Omit<React.ComponentProps<typeof NextLink>, 'children'> & {
     iconProps: React.ComponentProps<typeof AwesomeIcon>;
-    tooltip?: React.ReactNode;
+    tooltip?: string;
 }) {
     return (
-        <NextLink className={clsx('text-center group', className, tooltip && 'has-tooltip')} {...rest}>
+        <NextLink
+            className={clsx('link link-primary group', className, tooltip && 'tooltip tooltip-right tooltip-accent')}
+            data-tip={tooltip}
+            {...rest}
+        >
             <AwesomeIcon
                 size="2x"
                 {...iconProps}
                 className={clsx('transition-all group-hover:scale-110 group-hover:shadow-lg', iconProps.className)}
             />
-            {tooltip && (
-                <div className="px-1 text-white -translate-y-1/2 rounded shadow-lg pointer-events-none top-1/2 bg-primary left-[120%] min-w-max group-hover:pointer-events-auto tooltip">
-                    {tooltip}
-                </div>
-            )}
         </NextLink>
     );
 }
@@ -33,40 +32,36 @@ function UserMenu() {
     const { data } = useSession();
 
     return (
-        <Menu
-            data-testid="user-menu"
-            position="top-right"
-            className="text-center"
-            btnProps={{
-                className:
-                    'group has-tooltip hover:scale-110 transition-all hover:shadow-lg active:scale-110 active:shadow-lg focus:scale-110 focus:shadow-lg',
-            }}
-            options={[
-                { children: <NextLink href="/">Public website</NextLink> },
-                {
-                    onClick: () => signOut(),
-                    children: 'Sign out',
-                },
-            ]}
+        <div
+            className="dropdown dropdown-right dropdown-end tooltip tooltip-right tooltip-accent"
+            data-tip={data?.user?.name}
         >
-            {data?.user?.image ? (
-                <img src={data.user.image} alt="User avatar" className="w-8 rounded" />
-            ) : (
-                <AwesomeIcon icon="user" />
-            )}
-            <span className="top-1/2 -translate-y-1/2 p-1 text-white rounded shadow-lg pointer-events-none bg-primary left-[120%] min-w-max group-hover:pointer-events-auto tooltip">
-                {data?.user?.name}
-            </span>
-        </Menu>
+            <label tabIndex={0} className="cursor-pointer">
+                {data?.user?.image ? (
+                    <img src={data.user.image} alt="User avatar" className="w-8 rounded" />
+                ) : (
+                    <AwesomeIcon icon="user" />
+                )}
+            </label>
+            <ul className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                <li>
+                    <NextLink href="/" className="link link-hover">
+                        Public website
+                    </NextLink>
+                </li>
+                <li>
+                    <button onClick={() => signOut()}>Sign out</button>
+                </li>
+            </ul>
+        </div>
     );
 }
 
 export function DashboardToolbar() {
-    const { data } = useSession();
-
     return (
         <header
-            className="flex flex-col gap-2 px-3 py-2 shadow-md bg-secondary rounded-e text-primary"
+            className="flex flex-col gap-2 px-3 py-2 shadow-md bg-neutral rounded-e text-primary"
+            // className="navbar bg-neutral text-neutral-content"
             data-testid="dashboard-header"
         >
             <ToolbarLink href="/dashboard" iconProps={{ icon: 'poo' }} tooltip="Dashboard" />

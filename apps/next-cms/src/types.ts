@@ -20,3 +20,7 @@ export type TPage = {
     html: THtmlBlockProps;
     previewHtml?: THtmlBlockProps;
 };
+
+export type TPrettify<T> = {
+    [K in keyof T]: T[K];
+} & {};
