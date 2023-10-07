@@ -50,7 +50,7 @@ const DEMO_PAGES_ARR: TPage[] = Array.from({ length: 1000 }, (_, i) => ({
     ...(i % 5 === 0 ? { image: '/pikachu.jpeg' } : {}),
 }));
 
-export const pageRouter = createTRPCRouter({
+export const pagesRouter = createTRPCRouter({
     create: publicProcedure
         .input(
             z.object({
