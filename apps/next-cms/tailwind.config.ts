@@ -5,10 +5,5 @@ export default {
     daisyui: {
         themes: ['light', 'dark', 'forest', 'aqua', 'winter'],
     },
-    plugins: [
-        require('@tailwindcss/container-queries'),
-        require('@tailwindcss/typography'),
-        require('@tailwindcss/forms'),
-        require('daisyui'),
-    ],
+    plugins: [require('@tailwindcss/container-queries'), require('@tailwindcss/typography'), require('daisyui')],
 } satisfies Config;
