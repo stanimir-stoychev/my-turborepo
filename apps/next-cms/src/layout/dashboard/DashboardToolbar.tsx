@@ -61,12 +61,11 @@ export function DashboardToolbar() {
     return (
         <header
             className="flex flex-col gap-2 px-3 py-2 shadow-md bg-neutral rounded-e text-primary"
-            // className="navbar bg-neutral text-neutral-content"
             data-testid="dashboard-header"
         >
             <ToolbarLink href="/dashboard" iconProps={{ icon: 'poo' }} tooltip="Dashboard" />
             <hr className="my-4" />
-            <ToolbarLink href="/dashboard/pages" iconProps={{ icon: 'book-bookmark', size: 'lg' }} tooltip="Pages" />
+            <ToolbarLink href="/dashboard/components" iconProps={{ icon: 'cubes', size: 'lg' }} tooltip="Components" />
             <div className="flex-1" />
             <UserMenu />
         </header>

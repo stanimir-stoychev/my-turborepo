@@ -1,5 +1,6 @@
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { DashboardToolbar } from './DashboardToolbar';
+import { DashboardToasterProvider } from './DashboardToaster';
 
 export function DashboardLayout({ children }: React.PropsWithChildren) {
     const { status } = useSession();
@@ -9,11 +10,11 @@ export function DashboardLayout({ children }: React.PropsWithChildren) {
     }
 
     return (
-        <div className="flex w-screen h-screen gap-2">
-            <DashboardToolbar />
-            <main data-testid="dashboard-content" className="flex-1 max-h-full px-4 py-2 overflow-auto">
+        <div className="flex w-screen h-screen gap-2 [&>main]:flex-1 [&>main]:h-full [&>main]:overflow-auto relative">
+            <DashboardToasterProvider>
+                <DashboardToolbar />
                 {children}
-            </main>
+            </DashboardToasterProvider>
         </div>
     );
 }
