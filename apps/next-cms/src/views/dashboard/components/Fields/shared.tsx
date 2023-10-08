@@ -76,7 +76,7 @@ export function FormControl({
         wrapperProps?: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
     }>) {
     return (
-        <div {...wrapperProps} className={twMerge('w-full max-w-xs form-control', wrapperProps?.className)}>
+        <div {...wrapperProps} className={twMerge('w-full form-control', wrapperProps?.className)}>
             <Label status={status}>{label}</Label>
             {children}
             <Message message={message} status={status} />

@@ -3,10 +3,10 @@ import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { FormControl } from './shared';
 
-export function DescriptionField({
+export function SeoDescriptionField({
     className,
-    name = 'component-description',
-    placeholder = "Component's description",
+    name = 'component-seo-description',
+    placeholder = "Component's SEO description",
     message,
     status,
     wrapperProps,
@@ -32,10 +32,10 @@ export function DescriptionField({
     );
 }
 
-DescriptionField.FormField = function NameFormField({
-    name = 'component-description',
+SeoDescriptionField.FormField = function NameFormField({
+    name = 'component-seo-description',
     ...rest
-}: React.ComponentProps<typeof DescriptionField>) {
+}: React.ComponentProps<typeof SeoDescriptionField>) {
     const { register } = useFormContext();
-    return <DescriptionField {...rest} {...register(name)} />;
+    return <SeoDescriptionField {...rest} {...register(name)} />;
 };

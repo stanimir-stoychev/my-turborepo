@@ -3,10 +3,10 @@ import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { FormControl } from './shared';
 
-export function NameField({
+export function SeoNameField({
     className,
-    name = 'component-name',
-    placeholder = "Component's name",
+    name = 'component--seo-name',
+    placeholder = "Component's SEO name",
     message,
     status,
     wrapperProps,
@@ -33,10 +33,10 @@ export function NameField({
     );
 }
 
-NameField.FormField = function NameFormField({
-    name = 'component-name',
+SeoNameField.FormField = function NameFormField({
+    name = 'component-seo-name',
     ...rest
-}: React.ComponentProps<typeof NameField>) {
+}: React.ComponentProps<typeof SeoNameField>) {
     const { register } = useFormContext();
-    return <NameField {...rest} {...register(name)} />;
+    return <SeoNameField {...rest} {...register(name)} />;
 };
