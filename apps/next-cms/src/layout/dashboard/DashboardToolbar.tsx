@@ -3,6 +3,7 @@ import NextLink from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 
 import { AwesomeIcon } from '~/components';
+import { ThemeProvider } from '~/context';
 
 function ToolbarLink({
     className,
@@ -67,6 +68,7 @@ export function DashboardToolbar() {
             <hr className="my-4" />
             <ToolbarLink href="/dashboard/components" iconProps={{ icon: 'cubes', size: 'lg' }} tooltip="Components" />
             <div className="flex-1" />
+            <ThemeProvider.ThemeToggle position="right" alignToEnd />
             <UserMenu />
         </header>
     );
