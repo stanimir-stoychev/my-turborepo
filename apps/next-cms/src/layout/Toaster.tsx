@@ -17,6 +17,7 @@ export type TToaster = {
     toasts: TToast[];
     hiddenToasts?: TToast[];
     visibleToasts: TToast[];
+    toastHelloWorld: () => void;
 };
 
 const defaultContext: TToaster = {
@@ -24,6 +25,7 @@ const defaultContext: TToaster = {
     removeToast: () => undefined,
     toasts: [],
     visibleToasts: [],
+    toastHelloWorld: () => undefined,
 };
 
 const ToasterContext = createContext(defaultContext);
@@ -46,6 +48,14 @@ const useBuildToaster = (maxOnDisplay: number): TToaster => {
         return () => setToasts((currentToasts) => currentToasts.filter((queuedToast) => queuedToast !== toast));
     }, []);
 
+    const toastHelloWorld = useCallback(() => {
+        pushToast({
+            message: 'Hello world!',
+            type: 'info',
+            timeToLive: Infinity,
+        });
+    }, [pushToast]);
+
     const { hiddenToasts, visibleToasts } = useMemo(
         () => ({
             visibleToasts: toasts.slice(-maxOnDisplay),
@@ -62,6 +72,7 @@ const useBuildToaster = (maxOnDisplay: number): TToaster => {
         toasts,
         hiddenToasts,
         visibleToasts,
+        toastHelloWorld,
     };
 };
 
@@ -137,12 +148,14 @@ export function ToasterProvider({
     return (
         <ToasterContext.Provider value={context}>
             {children}
-            <aside className={twMerge('toast', className)} {...rest}>
-                <HiddenToasts />
-                {context.visibleToasts.map((toast, index) => (
-                    <VisibleToast key={index} toast={toast} />
-                ))}
-            </aside>
+            {!!context.visibleToasts.length && (
+                <aside className={twMerge('toast z-50', className)} {...rest}>
+                    <HiddenToasts />
+                    {context.visibleToasts.map((toast, index) => (
+                        <VisibleToast key={index} toast={toast} />
+                    ))}
+                </aside>
+            )}
         </ToasterContext.Provider>
     );
 }
