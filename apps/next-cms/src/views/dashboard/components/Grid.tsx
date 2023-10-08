@@ -42,7 +42,7 @@ export function Grid({ children, className, ...rest }: React.HtmlHTMLAttributes<
     return (
         <ul
             className={twMerge(
-                clsx('group grid relative gap-2 grid-cols-1 pb-10', {
+                clsx('group grid relative gap-2 grid-cols-1 items-start pb-10', {
                     'md:grid-cols-2': gridSize === GRID_SIZES[0],
                     'md:grid-cols-3': gridSize === GRID_SIZES[1],
                     'md:grid-cols-5': gridSize === GRID_SIZES[2],
@@ -54,10 +54,16 @@ export function Grid({ children, className, ...rest }: React.HtmlHTMLAttributes<
             {data?.pages.map((page, index) => (
                 <Fragment key={index}>
                     {page.items.map((component) => (
-                        <li key={component.id} className="h-64 mockup-code">
-                            <pre>
-                                <code>{JSON.stringify(component, null, 4)}</code>
-                            </pre>
+                        <li key={component.id} className="shadow-xl card bg-base-200">
+                            <div className="card-body">
+                                <h2 className="card-title">{component.name}</h2>
+                                <p>{component.description}</p>
+                                <div className="justify-end card-actions">
+                                    <button className="btn btn-primary btn-sm">
+                                        View <AwesomeIcon icon="external-link-alt" />
+                                    </button>
+                                </div>
+                            </div>
                         </li>
                     ))}
                 </Fragment>
