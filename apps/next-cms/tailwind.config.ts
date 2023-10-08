@@ -6,4 +6,14 @@ export default {
         themes: ['light', 'dark', 'forest', 'aqua', 'winter'],
     },
     plugins: [require('@tailwindcss/container-queries'), require('@tailwindcss/typography'), require('daisyui')],
+    theme: {
+        extend: {
+            minHeight({ theme }) {
+                return { ...theme('height') };
+            },
+            minWidth({ theme }) {
+                return { ...theme('width') };
+            },
+        },
+    },
 } satisfies Config;
