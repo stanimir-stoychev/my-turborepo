@@ -61,7 +61,7 @@ function UserMenu() {
 export function DashboardToolbar() {
     return (
         <header
-            className="flex flex-col gap-2 px-3 py-2 shadow-md bg-neutral rounded-e text-primary"
+            className="z-40 flex flex-col gap-2 px-3 py-2 shadow-md bg-neutral rounded-e text-primary"
             data-testid="dashboard-header"
         >
             <ToolbarLink href="/dashboard" iconProps={{ icon: 'poo' }} tooltip="Dashboard" />
