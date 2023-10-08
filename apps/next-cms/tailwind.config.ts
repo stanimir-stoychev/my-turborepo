@@ -38,6 +38,12 @@ export default {
     plugins: [require('@tailwindcss/container-queries'), require('@tailwindcss/typography'), require('daisyui')],
     theme: {
         extend: {
+            maxHeight({ theme }) {
+                return { ...theme('height') };
+            },
+            maxWidth({ theme }) {
+                return { ...theme('width') };
+            },
             minHeight({ theme }) {
                 return { ...theme('height') };
             },
