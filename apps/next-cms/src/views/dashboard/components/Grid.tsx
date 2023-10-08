@@ -42,7 +42,7 @@ export function Grid({ children, className, ...rest }: React.HtmlHTMLAttributes<
     return (
         <ul
             className={twMerge(
-                clsx('group grid relative gap-2 grid-cols-1', {
+                clsx('group grid relative gap-2 grid-cols-1 pb-10', {
                     'md:grid-cols-2': gridSize === GRID_SIZES[0],
                     'md:grid-cols-3': gridSize === GRID_SIZES[1],
                     'md:grid-cols-5': gridSize === GRID_SIZES[2],

@@ -12,15 +12,20 @@ export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttr
     const [minSearchTermLength] = useDashboardComponentsContext().minSearchTermLength;
 
     const inputRef = useRef<HTMLInputElement>(null);
-    const [inputValue, setInputValue] = useState(searchTerm);
 
-    const canClear = Boolean(inputValue || searchTerm);
+    const canClear = Boolean(searchTerm);
 
     const handleFocus = () => inputRef.current?.focus?.();
-    const handleInputBlur = () => setInputValue(searchTerm);
+
+    const handleInputBlur = () => {
+        if (!inputRef.current) return;
+        inputRef.current.value = searchTerm ?? '';
+    };
+
     const handleClear = () => {
         setSearchTerm(undefined);
-        setInputValue(undefined);
+        if (!inputRef.current) return;
+        inputRef.current.value = '';
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -59,8 +64,6 @@ export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttr
                 name="search"
                 placeholder="Search for components"
                 className="input input-sm input-bordered join-item"
-                value={inputValue}
-                onChange={(event) => setInputValue(event.target.value)}
                 onBlur={handleInputBlur}
             />
             {canClear && (
