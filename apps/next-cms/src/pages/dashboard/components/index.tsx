@@ -4,7 +4,7 @@ import { CreateNewComponent, DashboardComponentsProvider, Grid, SearchField } fr
 import type { TNextPageWithLayout } from '~/types';
 
 const DashboardComponentsRoot: TNextPageWithLayout = () => (
-    <main className="flex flex-col gap-4 px-4 py-2">
+    <main className="relative flex flex-col gap-4 px-4 py-2">
         <DashboardComponentsProvider>
             <DashboardTitle>Components</DashboardTitle>
             <hr />
