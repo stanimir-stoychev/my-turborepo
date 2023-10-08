@@ -4,39 +4,39 @@ import clsx from 'clsx';
 
 import { AwesomeIcon } from '~/components';
 
-type TDashboardToast = {
+type TToast = {
     message: React.ReactNode;
     type?: 'info' | 'warning' | 'success' | 'error';
     divProps?: Omit<React.HtmlHTMLAttributes<HTMLDivElement>, 'children'>;
     timeToLive?: number;
 };
 
-export type TDashboardToaster = {
-    pushToast: (toast: TDashboardToast) => () => void;
-    removeToast: (toast: TDashboardToast) => void;
-    toasts: TDashboardToast[];
-    hiddenToasts?: TDashboardToast[];
-    visibleToasts: TDashboardToast[];
+export type TToaster = {
+    pushToast: (toast: TToast) => () => void;
+    removeToast: (toast: TToast) => void;
+    toasts: TToast[];
+    hiddenToasts?: TToast[];
+    visibleToasts: TToast[];
 };
 
-const defaultContext: TDashboardToaster = {
+const defaultContext: TToaster = {
     pushToast: () => () => undefined,
     removeToast: () => undefined,
     toasts: [],
     visibleToasts: [],
 };
 
-const DashboardToasterContext = createContext(defaultContext);
-DashboardToasterContext.displayName = '"Dashboard" Toaster Context';
+const ToasterContext = createContext(defaultContext);
+ToasterContext.displayName = 'Toaster Context (root)';
 
-const useBuildDashboardToaster = (maxOnDisplay: number): TDashboardToaster => {
+const useBuildToaster = (maxOnDisplay: number): TToaster => {
     const [toasts, setToasts] = useState(defaultContext.toasts);
 
-    const removeToast = useCallback((toast: TDashboardToast) => {
+    const removeToast = useCallback((toast: TToast) => {
         setToasts((currentToasts) => currentToasts.filter((queuedToast) => queuedToast !== toast));
     }, []);
 
-    const pushToast: TDashboardToaster['pushToast'] = useCallback((toast) => {
+    const pushToast: TToaster['pushToast'] = useCallback((toast) => {
         setToasts((currentToasts) => [...currentToasts, toast]);
 
         if (toast.timeToLive !== Infinity) {
@@ -65,10 +65,10 @@ const useBuildDashboardToaster = (maxOnDisplay: number): TDashboardToaster => {
     };
 };
 
-export const useDashboardToaster = () => useContext(DashboardToasterContext);
+export const useToaster = () => useContext(ToasterContext);
 
-function VisibleToast({ toast }: { toast: TDashboardToast }) {
-    const { removeToast } = useDashboardToaster();
+function VisibleToast({ toast }: { toast: TToast }) {
+    const { removeToast } = useToaster();
     const { divProps, message, type = 'info' } = toast;
 
     const icon = useMemo((): React.ComponentProps<typeof AwesomeIcon>['icon'] => {
@@ -107,7 +107,7 @@ function VisibleToast({ toast }: { toast: TDashboardToast }) {
 }
 
 function HiddenToasts() {
-    const { hiddenToasts } = useDashboardToaster();
+    const { hiddenToasts } = useToaster();
 
     if (!hiddenToasts?.length) return null;
 
@@ -127,15 +127,15 @@ function HiddenToasts() {
     );
 }
 
-export function DashboardToasterProvider({
+export function ToasterProvider({
     children,
     className,
     maxOnDisplay = 5,
     ...rest
 }: React.HtmlHTMLAttributes<HTMLDivElement> & { maxOnDisplay?: number }) {
-    const context = useBuildDashboardToaster(maxOnDisplay);
+    const context = useBuildToaster(maxOnDisplay);
     return (
-        <DashboardToasterContext.Provider value={context}>
+        <ToasterContext.Provider value={context}>
             {children}
             <aside className={twMerge('toast', className)} {...rest}>
                 <HiddenToasts />
@@ -143,8 +143,8 @@ export function DashboardToasterProvider({
                     <VisibleToast key={index} toast={toast} />
                 ))}
             </aside>
-        </DashboardToasterContext.Provider>
+        </ToasterContext.Provider>
     );
 }
 
-DashboardToasterProvider.Toast = VisibleToast;
+ToasterProvider.Toast = VisibleToast;

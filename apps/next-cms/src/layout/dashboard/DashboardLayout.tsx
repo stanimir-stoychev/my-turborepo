@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react';
 import { DashboardToolbar } from './DashboardToolbar';
-import { DashboardToasterProvider } from './DashboardToaster';
+import { ToasterProvider } from '../Toaster';
 
 export function DashboardLayout({ children }: React.PropsWithChildren) {
     const { status } = useSession();
@@ -11,10 +11,12 @@ export function DashboardLayout({ children }: React.PropsWithChildren) {
 
     return (
         <div className="flex w-screen h-screen gap-2 [&>main]:flex-1 [&>main]:h-full [&>main]:overflow-auto relative">
-            <DashboardToasterProvider>
+            <ToasterProvider>
                 <DashboardToolbar />
                 {children}
-            </DashboardToasterProvider>
+            </ToasterProvider>
         </div>
     );
 }
+
+DashboardLayout.displayName = 'layout/Dashboard';

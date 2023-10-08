@@ -2,12 +2,12 @@ import { useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { AwesomeIcon } from '~/components';
-import { useDashboardToaster } from '~/layout/dashboard/DashboardToaster';
+import { useToaster } from '~/layout/Toaster';
 
 import { useDashboardComponentsContext } from './Context';
 
 export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttributes<HTMLFormElement>) {
-    const { pushToast } = useDashboardToaster();
+    const { pushToast } = useToaster();
     const [searchTerm, setSearchTerm] = useDashboardComponentsContext().searchTerm;
     const [minSearchTermLength] = useDashboardComponentsContext().minSearchTermLength;
 
