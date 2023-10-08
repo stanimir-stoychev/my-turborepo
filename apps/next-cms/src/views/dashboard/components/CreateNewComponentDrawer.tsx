@@ -47,15 +47,6 @@ function Section({
     );
 }
 
-function NameAndDescription() {
-    return (
-        <Section title="Name and description" contentProps={{ className: 'flex flex-col gap-2' }}>
-            <NameField.FormField />
-            <DescriptionField.FormField />
-        </Section>
-    );
-}
-
 export function CreateNewComponentDrawer() {
     const [isCreateNewDrawerOpen, setIsCreateNewDrawerOpen] = useDashboardComponentsContext().isCreateNewDrawerOpen;
     const closeDrawer = useCallback(() => setIsCreateNewDrawerOpen(false), [setIsCreateNewDrawerOpen]);
@@ -68,10 +59,28 @@ export function CreateNewComponentDrawer() {
                 'pointer-events-none -z-10 opacity-0': !isCreateNewDrawerOpen,
             })}
         >
-            <div className="absolute left-0 right-0 w-full h-full cursor-default bg-slate-700/70" />
-            <main className="absolute right-0 h-full px-4 py-2 rounded-l bg-base-100 min-w-56">
+            <button
+                onClick={closeDrawer}
+                className="absolute left-0 right-0 w-full h-full cursor-default bg-slate-700/70"
+            />
+            <main className="absolute right-0 h-full p-4 overflow-auto rounded-l bg-base-100 min-w-56 md:min-w-96">
                 <CreateNewComponentForm>
-                    <NameAndDescription />
+                    <Section title="Name and description" contentProps={{ className: 'flex flex-col gap-2' }}>
+                        <NameField.FormField />
+                        <DescriptionField.FormField />
+                    </Section>
+                    <Section title="SEO">
+                        <div className="h-96" />
+                    </Section>
+                    <Section title="HTML">
+                        <div className="h-96" />
+                    </Section>
+                    <Section title="Tags">
+                        <div className="h-96" />
+                    </Section>
+                    <Section title="Categories">
+                        <div className="h-96" />
+                    </Section>
                 </CreateNewComponentForm>
             </main>
         </aside>
