@@ -1,5 +1,5 @@
 import { DashboardTitle } from '~/layout';
-import { CreateNewComponent, DashboardComponentsProvider, Grid, SearchField } from '~/views/dashboard/components';
+import { CreateNewComponentDrawer, DashboardComponentsProvider, Grid, SearchField } from '~/views/dashboard/components';
 
 import type { TNextPageWithLayout } from '~/types';
 
@@ -14,9 +14,9 @@ const DashboardComponentsRoot: TNextPageWithLayout = () => (
             </div>
             <Grid className="flex-1 overflow-auto" />
             <aside className="fixed z-10 right-2 bottom-2">
-                <CreateNewComponent.Fab />
+                <CreateNewComponentDrawer.OpenButton />
             </aside>
-            <CreateNewComponent />
+            <CreateNewComponentDrawer />
         </DashboardComponentsProvider>
     </main>
 );
