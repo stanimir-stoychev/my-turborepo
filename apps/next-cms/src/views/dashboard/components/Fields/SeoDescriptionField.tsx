@@ -2,19 +2,28 @@ import { useFormContext } from 'react-hook-form';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { FormControl } from './shared';
+import { forwardRef } from 'react';
 
-export function SeoDescriptionField({
-    className,
-    name = 'component-seo-description',
-    placeholder = "Component's SEO description",
-    label = 'Description',
-    message,
-    status,
-    wrapperProps,
-    ...rest
-}: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement> &
-    Pick<React.ComponentProps<typeof FormControl>, 'label' | 'message' | 'status' | 'wrapperProps'>) {
-    return (
+type TSeoDescriptionFieldProps = React.DetailedHTMLProps<
+    React.InputHTMLAttributes<HTMLTextAreaElement>,
+    HTMLTextAreaElement
+> &
+    Pick<React.ComponentProps<typeof FormControl>, 'label' | 'message' | 'status' | 'wrapperProps'>;
+
+export const SeoDescriptionField = forwardRef<HTMLTextAreaElement, TSeoDescriptionFieldProps>(
+    (
+        {
+            className,
+            name = 'component-seo-description',
+            placeholder = "Component's SEO description",
+            label = 'Description',
+            message,
+            status,
+            wrapperProps,
+            ...rest
+        },
+        ref,
+    ) => (
         <FormControl label={label} message={message} status={status} wrapperProps={wrapperProps}>
             <textarea
                 name={name}
@@ -30,8 +39,10 @@ export function SeoDescriptionField({
                 {...rest}
             />
         </FormControl>
-    );
-}
+    ),
+) as React.ForwardRefExoticComponent<TSeoDescriptionFieldProps> & {
+    FormField: React.ComponentType<TSeoDescriptionFieldProps>;
+};
 
 SeoDescriptionField.FormField = function NameFormField({
     name = 'component-seo-description',

@@ -1,4 +1,5 @@
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
+import { twMerge } from 'tailwind-merge';
 import type { TComponentUpdate, TNewComponent } from '~/server/repositories';
 
 export function CreateNewComponentForm({
@@ -20,6 +21,20 @@ export function CreateNewComponentForm({
         </FormProvider>
     );
 }
+
+CreateNewComponentForm.SubmitButton = function SubmitButton({
+    children,
+    className,
+    ...rest
+}: React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>) {
+    const { formState } = useFormContext();
+
+    return (
+        <button type="submit" disabled={!formState.isValid} className={twMerge('btn', className)} {...rest}>
+            {children}
+        </button>
+    );
+};
 
 export function UpdateComponentForm({
     id,

@@ -110,6 +110,7 @@ ThemeProvider.ThemeToggle = function ThemeToggle({
                 <div className="grid grid-cols-1 gap-3 p-3">
                     {supportedThemes.map((theme) => (
                         <button
+                            key={theme}
                             className="overflow-hidden text-left rounded-lg outline-base-content"
                             onClick={() => setTheme(theme)}
                             data-theme={theme}
