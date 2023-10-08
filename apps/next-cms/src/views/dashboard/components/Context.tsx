@@ -13,6 +13,7 @@ export function DashboardComponentsProvider({ children }: React.PropsWithChildre
         minSearchTermLength: useState(DEFAULT_CONTEXT.minSearchTermLength[0]),
         gridSize: useState(DEFAULT_CONTEXT.gridSize[0]),
         searchTerm: useState(DEFAULT_CONTEXT.searchTerm[0]),
+        isCreateNewDrawerOpen: useState(DEFAULT_CONTEXT.isCreateNewDrawerOpen[0]),
     };
 
     return <Context.Provider value={context}>{children}</Context.Provider>;
