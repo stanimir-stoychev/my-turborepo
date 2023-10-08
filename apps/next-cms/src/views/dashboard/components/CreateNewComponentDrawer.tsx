@@ -93,12 +93,12 @@ export function CreateNewComponentDrawer() {
             />
             <main className="absolute right-0 h-full p-4 overflow-auto rounded-l bg-base-100 min-w-56 md:min-w-96">
                 <CreateNewComponentForm className="flex flex-col gap-2 max-w-56 md:max-w-96">
-                    <Section title="Name and description" contentProps={{ className: 'flex flex-col gap-2' }}>
-                        <NameField.FormField />
+                    <Section title="Name* and description" contentProps={{ className: 'flex flex-col gap-2' }}>
+                        <NameField.FormField label="Name*" />
                         <DescriptionField.FormField />
                     </Section>
                     <SeoSection />
-                    <Section title="HTML">
+                    <Section title="HTML*">
                         <div className="h-96" />
                     </Section>
                     <Section title="Categories">

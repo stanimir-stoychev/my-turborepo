@@ -7,14 +7,15 @@ export function NameField({
     className,
     name = 'component-name',
     placeholder = "Component's name",
+    label = 'Name',
     message,
     status,
     wrapperProps,
     ...rest
 }: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
-    Pick<React.ComponentProps<typeof FormControl>, 'message' | 'status' | 'wrapperProps'>) {
+    Pick<React.ComponentProps<typeof FormControl>, 'label' | 'message' | 'status' | 'wrapperProps'>) {
     return (
-        <FormControl label="Name" message={message} status={status} wrapperProps={wrapperProps}>
+        <FormControl label={label} message={message} status={status} wrapperProps={wrapperProps}>
             <input
                 type="text"
                 name={name}

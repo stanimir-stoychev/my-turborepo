@@ -72,7 +72,7 @@ export function FormControl({
 }: TWithMessage &
     TWithStatus &
     React.PropsWithChildren<{
-        label: React.ReactNode;
+        label?: React.ReactNode;
         wrapperProps?: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
     }>) {
     return (

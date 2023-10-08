@@ -7,14 +7,15 @@ export function DescriptionField({
     className,
     name = 'component-description',
     placeholder = "Component's description",
+    label = 'Description',
     message,
     status,
     wrapperProps,
     ...rest
 }: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement> &
-    Pick<React.ComponentProps<typeof FormControl>, 'message' | 'status' | 'wrapperProps'>) {
+    Pick<React.ComponentProps<typeof FormControl>, 'label' | 'message' | 'status' | 'wrapperProps'>) {
     return (
-        <FormControl label="Description" message={message} status={status} wrapperProps={wrapperProps}>
+        <FormControl label={label} message={message} status={status} wrapperProps={wrapperProps}>
             <textarea
                 name={name}
                 placeholder={placeholder}
