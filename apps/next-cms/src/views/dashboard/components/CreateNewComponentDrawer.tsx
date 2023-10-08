@@ -9,7 +9,7 @@ import { CreateNewComponentForm } from './Forms';
 import { DescriptionField, NameField, SeoDescriptionField, SeoNameField } from './Fields';
 import { useDashboardComponentsContext } from './Context';
 
-export function OpenButton() {
+function OpenButton() {
     const [isCreateNewDrawerOpen, setIsCreateNewDrawerOpen] = useDashboardComponentsContext().isCreateNewDrawerOpen;
 
     return (
