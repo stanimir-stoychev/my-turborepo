@@ -1,11 +1,20 @@
+import { forwardRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
+
 import { FormControl } from './shared';
-import { forwardRef } from 'react';
 
 type TNameFieldProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
     Pick<React.ComponentProps<typeof FormControl>, 'label' | 'message' | 'status' | 'wrapperProps'>;
+
+type TNameField = React.ForwardRefExoticComponent<TNameFieldProps> & {
+    FormField: React.ComponentType<
+        TNameFieldProps & {
+            registerOptions?: Parameters<ReturnType<typeof useFormContext>['register']>[1];
+        }
+    >;
+};
 
 export const NameField = forwardRef<HTMLInputElement, TNameFieldProps>(
     (
@@ -39,14 +48,9 @@ export const NameField = forwardRef<HTMLInputElement, TNameFieldProps>(
             />
         </FormControl>
     ),
-) as React.ForwardRefExoticComponent<TNameFieldProps> & {
-    FormField: React.ComponentType<TNameFieldProps>;
-};
+) as TNameField;
 
-NameField.FormField = function NameFormField({
-    name = 'component-name',
-    ...rest
-}: React.ComponentProps<typeof NameField>) {
+NameField.FormField = ({ name = 'component-name', registerOptions, ...rest }) => {
     const { register } = useFormContext();
-    return <NameField {...rest} {...register(name)} />;
+    return <NameField {...rest} {...register(name, registerOptions)} />;
 };

@@ -1,17 +1,26 @@
+import { forwardRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
+
 import { FormControl } from './shared';
-import { forwardRef } from 'react';
 
 type TSeoNameFieldProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
     Pick<React.ComponentProps<typeof FormControl>, 'label' | 'message' | 'status' | 'wrapperProps'>;
+
+type TSeoNameField = React.ForwardRefExoticComponent<TSeoNameFieldProps> & {
+    FormField: React.ComponentType<
+        TSeoNameFieldProps & {
+            registerOptions?: Parameters<ReturnType<typeof useFormContext>['register']>[1];
+        }
+    >;
+};
 
 export const SeoNameField = forwardRef<HTMLInputElement, TSeoNameFieldProps>(
     (
         {
             className,
-            name = 'component--seo-name',
+            name = 'component-seo-name',
             placeholder = "Component's SEO name",
             label = 'Name',
             message,
@@ -23,6 +32,7 @@ export const SeoNameField = forwardRef<HTMLInputElement, TSeoNameFieldProps>(
     ) => (
         <FormControl label={label} message={message} status={status} wrapperProps={wrapperProps}>
             <input
+                ref={ref}
                 type="text"
                 name={name}
                 placeholder={placeholder}
@@ -38,14 +48,9 @@ export const SeoNameField = forwardRef<HTMLInputElement, TSeoNameFieldProps>(
             />
         </FormControl>
     ),
-) as React.ForwardRefExoticComponent<TSeoNameFieldProps> & {
-    FormField: React.ComponentType<TSeoNameFieldProps>;
-};
+) as TSeoNameField;
 
-SeoNameField.FormField = function NameFormField({
-    name = 'component-seo-name',
-    ...rest
-}: React.ComponentProps<typeof SeoNameField>) {
+SeoNameField.FormField = ({ name = 'component-seo-name', registerOptions, ...rest }) => {
     const { register } = useFormContext();
-    return <SeoNameField {...rest} {...register(name)} />;
+    return <SeoNameField {...rest} {...register(name, registerOptions)} />;
 };

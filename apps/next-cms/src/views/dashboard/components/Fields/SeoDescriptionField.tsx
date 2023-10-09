@@ -1,14 +1,23 @@
+import { forwardRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
+
 import { FormControl } from './shared';
-import { forwardRef } from 'react';
 
 type TSeoDescriptionFieldProps = React.DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLTextAreaElement>,
     HTMLTextAreaElement
 > &
     Pick<React.ComponentProps<typeof FormControl>, 'label' | 'message' | 'status' | 'wrapperProps'>;
+
+type TSeoDescriptionField = React.ForwardRefExoticComponent<TSeoDescriptionFieldProps> & {
+    FormField: React.ComponentType<
+        TSeoDescriptionFieldProps & {
+            registerOptions?: Parameters<ReturnType<typeof useFormContext>['register']>[1];
+        }
+    >;
+};
 
 export const SeoDescriptionField = forwardRef<HTMLTextAreaElement, TSeoDescriptionFieldProps>(
     (
@@ -26,6 +35,7 @@ export const SeoDescriptionField = forwardRef<HTMLTextAreaElement, TSeoDescripti
     ) => (
         <FormControl label={label} message={message} status={status} wrapperProps={wrapperProps}>
             <textarea
+                ref={ref}
                 name={name}
                 placeholder={placeholder}
                 className={twMerge(
@@ -40,14 +50,9 @@ export const SeoDescriptionField = forwardRef<HTMLTextAreaElement, TSeoDescripti
             />
         </FormControl>
     ),
-) as React.ForwardRefExoticComponent<TSeoDescriptionFieldProps> & {
-    FormField: React.ComponentType<TSeoDescriptionFieldProps>;
-};
+) as TSeoDescriptionField;
 
-SeoDescriptionField.FormField = function NameFormField({
-    name = 'component-seo-description',
-    ...rest
-}: React.ComponentProps<typeof SeoDescriptionField>) {
+SeoDescriptionField.FormField = ({ name = 'component-seo-description', registerOptions, ...rest }) => {
     const { register } = useFormContext();
-    return <SeoDescriptionField {...rest} {...register(name)} />;
+    return <SeoDescriptionField {...rest} {...register(name, registerOptions)} />;
 };

@@ -2,6 +2,7 @@ import { forwardRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
+
 import { FormControl } from './shared';
 
 type TDescriptionFieldProps = React.DetailedHTMLProps<
@@ -9,6 +10,14 @@ type TDescriptionFieldProps = React.DetailedHTMLProps<
     HTMLTextAreaElement
 > &
     Pick<React.ComponentProps<typeof FormControl>, 'label' | 'message' | 'status' | 'wrapperProps'>;
+
+type TDescriptionField = React.ForwardRefExoticComponent<TDescriptionFieldProps> & {
+    FormField: React.ComponentType<
+        TDescriptionFieldProps & {
+            registerOptions?: Parameters<ReturnType<typeof useFormContext>['register']>[1];
+        }
+    >;
+};
 
 export const DescriptionField = forwardRef<HTMLTextAreaElement, TDescriptionFieldProps>(
     (
@@ -41,14 +50,9 @@ export const DescriptionField = forwardRef<HTMLTextAreaElement, TDescriptionFiel
             />
         </FormControl>
     ),
-) as React.ForwardRefExoticComponent<TDescriptionFieldProps> & {
-    FormField: React.ComponentType<TDescriptionFieldProps>;
-};
+) as TDescriptionField;
 
-DescriptionField.FormField = function NameFormField({
-    name = 'component-description',
-    ...rest
-}: React.ComponentProps<typeof DescriptionField>) {
+DescriptionField.FormField = ({ name = 'component-description', registerOptions, ...rest }) => {
     const { register } = useFormContext();
-    return <DescriptionField {...rest} {...register(name)} />;
+    return <DescriptionField {...rest} {...register(name, registerOptions)} />;
 };
