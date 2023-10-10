@@ -8,12 +8,12 @@ const HTML_BASE_SCHEMA = z.object({
 });
 
 const HTML_SCHEMA = HTML_BASE_SCHEMA.extend({
-    children: z.union([z.string(), z.array(HTML_BASE_SCHEMA), HTML_BASE_SCHEMA]),
+    children: z.union([z.string(), z.array(z.union([z.string(), HTML_BASE_SCHEMA])), HTML_BASE_SCHEMA]),
 });
 
 export const COMPONENT_SCHEMA = z.object({
     name: z.string(),
-    html: z.union([z.string(), HTML_SCHEMA, z.array(HTML_SCHEMA)]),
+    html: z.union([z.string(), HTML_SCHEMA, z.array(z.union([z.string(), HTML_SCHEMA]))]),
     description: z.string(),
     categories: z.array(z.string()),
     tags: z.array(z.string()),
