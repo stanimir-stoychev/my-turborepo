@@ -7,6 +7,10 @@ export const DEFAULT_CONTEXT: TDashboardComponentsPage = {
     searchTerm: [undefined, noop],
     gridSize: ['md', noop],
     isCreateNewDrawerOpen: [false, noop],
+    serverActions: {
+        createNewComponent: noop as any,
+        greet: noop as any,
+    },
 };
 
 export const GRID_SIZES = ['sm', 'md', 'lg'] as const;

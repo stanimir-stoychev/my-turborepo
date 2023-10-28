@@ -2,5 +2,9 @@ export type TComponentEntity = {
     id: number;
     name: string;
     description: string;
-    html: string | TComponentEntity | (string | TComponentEntity)[];
+    htmlProps?: Partial<{ id: string; className: string; style: string }>;
+    html:
+        | string
+        | Pick<TComponentEntity, 'html' | 'htmlProps'>
+        | (string | Pick<TComponentEntity, 'html' | 'htmlProps'>)[];
 };

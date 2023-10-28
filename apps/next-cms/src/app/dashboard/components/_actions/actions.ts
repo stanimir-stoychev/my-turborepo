@@ -1,16 +1,19 @@
+'use server';
+
 import { z } from 'zod';
+import { newSafeAction } from '~/app/_lib/safe-server-action';
+import { NEW_COMPONENT_SCHEMA } from './schemas';
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '~/server/api/trpc';
-import {
-    ComponentsRepository,
-    FIND_COMPONENT_QUERY_SCHEMA,
-    NEW_COMPONENT_SCHEMA,
-    QUERY_LIMITERS,
-    UPDATE_COMPONENT_SCHEMA,
-} from '~/server/repositories';
+export const greetUser = newSafeAction(z.object({ name: z.string() }), async ({ name }) => {
+    return `Hello, ${name}`;
+});
 
-const removeFalsyValues = <T>(arr: (T | null | undefined)[]) => arr.filter(Boolean) as T[];
+export const createNewComponent = newSafeAction(NEW_COMPONENT_SCHEMA, async (newComponent) => {
+    console.log('What we got at the end is this:\t', newComponent);
+    return 'Hello, World!';
+});
 
+/*
 export const componentsRouter = createTRPCRouter({
     total: publicProcedure.query(() => ComponentsRepository.total()),
 
@@ -31,3 +34,4 @@ export const componentsRouter = createTRPCRouter({
         .input(z.object({ id: z.string() }))
         .mutation(({ input }) => ComponentsRepository.delete(input.id)),
 });
+*/
