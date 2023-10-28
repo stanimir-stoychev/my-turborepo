@@ -1,3 +1,5 @@
+'use client';
+
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import type { TComponentUpdate, TNewComponent } from '~/server/repositories';

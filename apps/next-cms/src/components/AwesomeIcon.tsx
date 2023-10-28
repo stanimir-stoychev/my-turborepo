@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef } from 'react';
 import { findIconDefinition, IconLookup } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';

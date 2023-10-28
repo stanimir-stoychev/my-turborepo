@@ -1,4 +1,6 @@
-import { useRef, useState } from 'react';
+'use client';
+
+import { useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { AwesomeIcon } from '~/components';

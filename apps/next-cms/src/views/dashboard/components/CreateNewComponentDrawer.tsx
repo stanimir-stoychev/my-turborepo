@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -76,6 +78,8 @@ function SeoSection() {
         </Section>
     );
 }
+
+export const CreateNewComponentDrawerOpenButton = OpenButton;
 
 export function CreateNewComponentDrawer() {
     const [isCreateNewDrawerOpen, setIsCreateNewDrawerOpen] = useDashboardComponentsContext().isCreateNewDrawerOpen;

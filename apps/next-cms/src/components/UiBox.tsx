@@ -1,3 +1,5 @@
+'use client';
+
 import { Fragment, forwardRef } from 'react';
 
 export type TUiBoxProps<E extends HTMLElement = HTMLElement, CP = undefined> = {

@@ -18,7 +18,12 @@ const config = {
         defaultLocale: 'en',
     },
     images: {
-        domains: ['picsum.photos'],
+        remotePatterns: [
+            {
+                protocol: 'http',
+                hostname: 'picsum.photos',
+            },
+        ],
     },
 };
 

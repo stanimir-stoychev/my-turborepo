@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
 import { useLocalStorage } from 'react-use';
 import clsx from 'clsx';
