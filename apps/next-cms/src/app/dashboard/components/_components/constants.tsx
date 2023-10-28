@@ -9,7 +9,21 @@ export const DEFAULT_CONTEXT: TDashboardComponentsPage = {
     isCreateNewDrawerOpen: [false, noop],
     serverActions: {
         createNewComponent: noop as any,
-        greet: noop as any,
+        findComponents: noop as any,
+    },
+    apiData: {
+        createNewComponent: {
+            execute: noop,
+            reset: noop,
+            result: {},
+            status: 'idle',
+        },
+        findComponents: {
+            data: [],
+            fetchNextPage: () => {},
+            hasNextPage: false,
+            isLoading: false,
+        },
     },
 };
 

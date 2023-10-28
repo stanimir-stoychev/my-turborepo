@@ -1,13 +1,14 @@
 import { z } from 'zod';
 
 const HTML_BASE_SCHEMA = z.object({
-    id: z.string().optional(),
-    className: z.string().optional(),
-    style: z.string().optional(),
+    // id: z.string().optional(),
+    // className: z.string().optional(),
+    // style: z.string().optional(),
+    html: z.string(),
 });
 
 const HTML_SCHEMA = HTML_BASE_SCHEMA.extend({
-    children: z.union([z.string(), z.array(z.union([z.string(), HTML_BASE_SCHEMA])), HTML_BASE_SCHEMA]),
+    html: z.union([HTML_BASE_SCHEMA, z.string(), z.array(z.union([z.string(), HTML_BASE_SCHEMA]))]),
 });
 
 export const COMPONENT_SCHEMA = z.object({
@@ -59,6 +60,8 @@ export const FIND_COMPONENT_QUERY_SCHEMA = z.object({
     any: z.string().optional(),
     name: z.string().optional(),
     description: z.string().optional(),
+    limit: z.number().optional(),
+    cursor: z.number().optional(),
     // categories: z.array(z.string()).optional(),
     // tags: z.array(z.string()).optional(),
 });

@@ -1,37 +1,46 @@
 'use server';
 
 import { z } from 'zod';
+import { ComponentsService } from '~/server/domains/components';
 import { newSafeAction } from '~/app/_lib/safe-server-action';
-import { NEW_COMPONENT_SCHEMA } from './schemas';
+import {
+    FIND_COMPONENT_QUERY_SCHEMA as findComponentSchema,
+    NEW_COMPONENT_SCHEMA as createNewComponentSchema,
+} from './schemas';
 
 export const greetUser = newSafeAction(z.object({ name: z.string() }), async ({ name }) => {
     return `Hello, ${name}`;
 });
 
-export const createNewComponent = newSafeAction(NEW_COMPONENT_SCHEMA, async (newComponent) => {
-    console.log('What we got at the end is this:\t', newComponent);
-    return 'Hello, World!';
-});
+const createNewComponentHandler = async (newComponent: z.infer<typeof createNewComponentSchema>) => {
+    const createdComponent = await ComponentsService.create({
+        ...newComponent,
+        description: newComponent.description ?? '',
+        html: newComponent.html ?? '',
+    });
 
-/*
-export const componentsRouter = createTRPCRouter({
-    total: publicProcedure.query(() => ComponentsRepository.total()),
+    return createdComponent;
+};
 
-    createMany: protectedProcedure.input(z.array(NEW_COMPONENT_SCHEMA)).mutation(async ({ input }) => {
-        const promises = await Promise.allSettled(input.map(ComponentsRepository.create));
-        return removeFalsyValues(promises.map((promise) => (promise.status === 'fulfilled' ? promise.value : null)));
-    }),
+export const createNewComponentServerAction = newSafeAction(createNewComponentSchema, createNewComponentHandler);
+export namespace TCreateNewComponentServerAction {
+    export type Action = typeof createNewComponentServerAction;
+    export type Schema = typeof createNewComponentSchema;
+    export type TSchema = z.infer<typeof createNewComponentSchema>;
+    export type Handler = typeof createNewComponentHandler;
+    export type Data = Awaited<ReturnType<typeof createNewComponentHandler>>;
+}
 
-    find: publicProcedure
-        .input(QUERY_LIMITERS.extend({ query: FIND_COMPONENT_QUERY_SCHEMA }))
-        .query(({ input: { query, ...limiters } }) => ComponentsRepository.find(query, limiters)),
-    create: protectedProcedure.input(NEW_COMPONENT_SCHEMA).mutation(({ input }) => ComponentsRepository.create(input)),
-    read: protectedProcedure.input(z.string()).query(({ input }) => ComponentsRepository.read(input)),
-    update: protectedProcedure
-        .input(UPDATE_COMPONENT_SCHEMA)
-        .mutation(({ input }) => ComponentsRepository.update(input)),
-    delete: protectedProcedure
-        .input(z.object({ id: z.string() }))
-        .mutation(({ input }) => ComponentsRepository.delete(input.id)),
-});
-*/
+const findComponentsHandler = async (query: z.infer<typeof findComponentSchema>) => {
+    const components = await ComponentsService.find(query);
+    return components;
+};
+
+export const findComponentsServerAction = newSafeAction(findComponentSchema, findComponentsHandler);
+export namespace TFindComponentsServerAction {
+    export type Action = typeof findComponentsServerAction;
+    export type Schema = typeof findComponentSchema;
+    export type TSchema = z.infer<typeof findComponentSchema>;
+    export type Handler = typeof findComponentsHandler;
+    export type Data = Awaited<ReturnType<typeof findComponentsHandler>>;
+}

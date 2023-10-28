@@ -79,6 +79,14 @@ function SeoSection() {
     );
 }
 
+function PostFormSubmissionMessages() {
+    const { result, status } = useDashboardComponentsContext().apiData.createNewComponent;
+
+    console.log({ result, status });
+
+    return <></>;
+}
+
 export function CreateNewComponentDrawer() {
     const [isCreateNewDrawerOpen, setIsCreateNewDrawerOpen] = useDashboardComponentsContext().isCreateNewDrawerOpen;
     const closeDrawer = useCallback(() => setIsCreateNewDrawerOpen(false), [setIsCreateNewDrawerOpen]);
@@ -92,6 +100,7 @@ export function CreateNewComponentDrawer() {
             })}
         >
             <button
+                data-tip="Close (backdrop)"
                 onClick={closeDrawer}
                 className="absolute left-0 right-0 w-full h-full cursor-default bg-slate-700/70"
             />
@@ -99,19 +108,21 @@ export function CreateNewComponentDrawer() {
                 {isCreateNewDrawerOpen && (
                     <CreateNewComponentForm className="flex flex-col gap-2 max-w-56 md:max-w-96">
                         <Section title="Name* and description" contentProps={{ className: 'flex flex-col gap-2' }}>
-                            <NameField.FormField label="Name*" registerOptions={{ required: true }} />
-                            <DescriptionField.FormField />
+                            <NameField.FormField name="name" label="Name*" registerOptions={{ required: true }} />
+                            <DescriptionField.FormField name="description" />
                         </Section>
                         <SeoSection />
                         <Section title="HTML*">
                             <HtmlTree />
                         </Section>
-                        <Section title="Categories">
+                        {/* <Section title="Categories">
                             <div className="h-96 filler-div" />
                         </Section>
                         <Section title="Tags">
                             <div className="h-96 filler-div" />
-                        </Section>
+                        </Section> */}
+                        <div className="flex-1" />
+                        <PostFormSubmissionMessages />
                         <div className="flex-1" />
                         <section className="flex gap-4">
                             <div className="flex-1" />
