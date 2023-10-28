@@ -76,7 +76,7 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInputProps>((props, r
                 </label>
             )}
 
-            <input {...rest} className={inputClassName} />
+            <input {...rest} ref={ref} className={inputClassName} />
 
             {message && (
                 <label className="label">
@@ -140,7 +140,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TTextAreaProps>((props, 
                 </label>
             )}
 
-            <textarea {...rest} className={inputClassName} />
+            <textarea {...rest} ref={ref} className={inputClassName} />
 
             {message && (
                 <label className="label">
