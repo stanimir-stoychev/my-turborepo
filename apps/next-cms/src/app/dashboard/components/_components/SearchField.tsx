@@ -19,6 +19,12 @@ export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttr
 
     const handleFocus = () => inputRef.current?.focus?.();
 
+    const handleEscapeKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Escape') {
+            event.currentTarget.blur();
+        }
+    };
+
     const handleInputBlur = () => {
         if (!inputRef.current) return;
         inputRef.current.value = searchTerm ?? '';
@@ -67,6 +73,7 @@ export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttr
                 placeholder="Search for components"
                 className="input input-sm input-bordered join-item"
                 onBlur={handleInputBlur}
+                onKeyDown={handleEscapeKeyPress}
             />
             {canClear && (
                 <button className="rounded-l-full btn btn-sm join-item btn-neutral" type="button" onClick={handleClear}>
