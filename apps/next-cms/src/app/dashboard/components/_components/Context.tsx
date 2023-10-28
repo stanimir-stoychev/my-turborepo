@@ -7,7 +7,7 @@ import { DEFAULT_CONTEXT } from './constants';
 import type { TDashboardComponentsPage } from './types';
 
 const Context = createContext(DEFAULT_CONTEXT);
-Context.displayName = 'dashboard/components';
+Context.displayName = 'dashboard/components (Page context)';
 
 const useInfiniteFindComponents = ({
     searchTerm,
@@ -81,4 +81,3 @@ export function DashboardComponentsProvider({
 
     return <Context.Provider value={context}>{children}</Context.Provider>;
 }
-DashboardComponentsProvider.displayName = '(dashboard/components) Page Context Provider';

@@ -81,9 +81,6 @@ function SeoSection() {
 
 function PostFormSubmissionMessages() {
     const { result, status } = useDashboardComponentsContext().apiData.createNewComponent;
-
-    console.log({ result, status });
-
     return <></>;
 }
 
