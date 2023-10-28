@@ -12,7 +12,7 @@ import { DescriptionField, NameField, SeoDescriptionField, SeoNameField } from '
 import { useDashboardComponentsContext } from './Context';
 import { HtmlTree } from './HtmlTree';
 
-function OpenButton() {
+export function CreateNewComponentDrawerOpenButton() {
     const [isCreateNewDrawerOpen, setIsCreateNewDrawerOpen] = useDashboardComponentsContext().isCreateNewDrawerOpen;
 
     return (
@@ -79,8 +79,6 @@ function SeoSection() {
     );
 }
 
-export const CreateNewComponentDrawerOpenButton = OpenButton;
-
 export function CreateNewComponentDrawer() {
     const [isCreateNewDrawerOpen, setIsCreateNewDrawerOpen] = useDashboardComponentsContext().isCreateNewDrawerOpen;
     const closeDrawer = useCallback(() => setIsCreateNewDrawerOpen(false), [setIsCreateNewDrawerOpen]);
@@ -127,5 +125,3 @@ export function CreateNewComponentDrawer() {
         </aside>
     );
 }
-
-CreateNewComponentDrawer.OpenButton = OpenButton;
