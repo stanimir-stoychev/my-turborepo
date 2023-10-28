@@ -8,6 +8,7 @@ import { AwesomeIcon } from '~/components';
 import { CreateNewComponentForm } from './Forms';
 import { DescriptionField, NameField, SeoDescriptionField, SeoNameField } from './Fields';
 import { useDashboardComponentsContext } from './Context';
+import { HtmlTree } from './HtmlTree';
 
 function OpenButton() {
     const [isCreateNewDrawerOpen, setIsCreateNewDrawerOpen] = useDashboardComponentsContext().isCreateNewDrawerOpen;
@@ -42,6 +43,7 @@ function Section({
             <div className="text-xl collapse-title">{title}</div>
             <div {...contentProps} className={twMerge('collapse-content', contentProps?.className)}>
                 {children}
+                <div className="min-h-7 aesthetic-filling" />
             </div>
         </section>
     );
@@ -92,27 +94,31 @@ export function CreateNewComponentDrawer() {
                 className="absolute left-0 right-0 w-full h-full cursor-default bg-slate-700/70"
             />
             <main className="absolute right-0 h-full p-4 overflow-auto rounded-l bg-base-100 min-w-56 md:min-w-96">
-                <CreateNewComponentForm className="flex flex-col gap-2 max-w-56 md:max-w-96">
-                    <Section title="Name* and description" contentProps={{ className: 'flex flex-col gap-2' }}>
-                        <NameField.FormField label="Name*" />
-                        <DescriptionField.FormField />
-                    </Section>
-                    <SeoSection />
-                    <Section title="HTML*">
-                        <div className="h-96" />
-                    </Section>
-                    <Section title="Categories">
-                        <div className="h-96" />
-                    </Section>
-                    <Section title="Tags">
-                        <div className="h-96" />
-                    </Section>
-                    <div className="flex-1" />
-                    <section className="flex gap-4">
+                {isCreateNewDrawerOpen && (
+                    <CreateNewComponentForm className="flex flex-col gap-2 max-w-56 md:max-w-96">
+                        <Section title="Name* and description" contentProps={{ className: 'flex flex-col gap-2' }}>
+                            <NameField.FormField label="Name*" registerOptions={{ required: true }} />
+                            <DescriptionField.FormField />
+                        </Section>
+                        <SeoSection />
+                        <Section title="HTML*">
+                            <HtmlTree />
+                        </Section>
+                        <Section title="Categories">
+                            <div className="h-96 filler-div" />
+                        </Section>
+                        <Section title="Tags">
+                            <div className="h-96 filler-div" />
+                        </Section>
                         <div className="flex-1" />
-                        <button className="btn btn-primary">Create</button>
-                    </section>
-                </CreateNewComponentForm>
+                        <section className="flex gap-4">
+                            <div className="flex-1" />
+                            <CreateNewComponentForm.SubmitButton className="btn btn-accent">
+                                Create
+                            </CreateNewComponentForm.SubmitButton>
+                        </section>
+                    </CreateNewComponentForm>
+                )}
             </main>
         </aside>
     );
