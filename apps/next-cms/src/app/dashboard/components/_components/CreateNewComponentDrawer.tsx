@@ -130,7 +130,6 @@ export function CreateNewComponentDrawer() {
                                 isRoot
                                 entity={htmlEntity}
                                 updateEntity={(updates) => {
-                                    console.log({ updates });
                                     setHtmlEntity((currentHtmlEntity) => ({
                                         ...currentHtmlEntity,
                                         ...updates,
