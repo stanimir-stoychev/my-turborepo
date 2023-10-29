@@ -12,7 +12,7 @@ const IN_MEMORY_STORAGE: TStoredEntity[] = Array.from({ length: 1000 }, (_, inde
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     name: `Component #${index}`,
-    html: `Component #${index}`,
+    html: [`Component #${index}`],
     description: `Component #${index} description`,
     categories: [`Category ${index % 10}`],
     tags: [`Tag ${index % 10}`],

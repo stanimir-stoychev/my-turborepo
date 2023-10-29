@@ -4,15 +4,22 @@ import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
 import { useDashboardComponentsContext } from './Context';
-import type { TComponentUpdate, TCreateNewComponentServerAction, TNewComponent } from '../_actions';
+
 import type { TPrettify } from '~/types';
+import type { TComponentEntity } from '~/server/domains/components';
+import type { TzUpdateComponentEntity, TCreateNewComponentServerAction } from '../_actions';
 
 export namespace TCreateNewComponentForm {
-    type UseFormHookData = ReturnType<typeof useForm<TNewComponent>>;
-    type UseFormHookParams = NonNullable<Parameters<typeof useForm<TCreateNewComponentServerAction.Schema>>[0]>;
+    type UseFromHook = typeof useForm<TCreateNewComponentServerAction.TSchema>;
+    type UseFormHookData = ReturnType<UseFromHook>;
+    type UseFormHookParams = NonNullable<Parameters<UseFromHook>[0]>;
+    type BaseHtmlFormProps = Omit<
+        React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>,
+        'onSubmit'
+    >;
 
     export type ComponentProps = TPrettify<
-        Omit<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'onSubmit'> & {
+        BaseHtmlFormProps & {
             onSubmit?: Parameters<UseFormHookData['handleSubmit']>[0];
             defaultValues?: UseFormHookParams['defaultValues'];
         }
@@ -23,7 +30,9 @@ export function CreateNewComponentForm({ onSubmit, ...rest }: TCreateNewComponen
     const {
         apiData: { createNewComponent },
     } = useDashboardComponentsContext();
-    const methods = useForm<TNewComponent>({ context: createNewComponent });
+    const methods = useForm<TCreateNewComponentServerAction.TSchema>({
+        context: createNewComponent,
+    });
 
     const handleSubmit = methods.handleSubmit((data, event) => {
         onSubmit?.(data, event);
@@ -55,10 +64,10 @@ export function UpdateComponentForm({
     onSubmit,
     ...rest
 }: Omit<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'onSubmit'> & {
-    id: string;
-    onSubmit?: Parameters<ReturnType<typeof useForm<TComponentUpdate>>['handleSubmit']>[0];
+    id: TComponentEntity['id'];
+    onSubmit?: Parameters<ReturnType<typeof useForm<TzUpdateComponentEntity>>['handleSubmit']>[0];
 }) {
-    const methods = useForm<TComponentUpdate>({
+    const methods = useForm<TzUpdateComponentEntity>({
         defaultValues: { id },
     });
 
