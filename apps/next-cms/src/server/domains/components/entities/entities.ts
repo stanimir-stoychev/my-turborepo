@@ -8,5 +8,5 @@ export type TComponentEntity = {
         style: string;
         component: string;
     }>;
-    html: (string | TComponentEntity)[];
+    html: (string | Pick<TComponentEntity, 'html' | 'htmlProps'>)[];
 };

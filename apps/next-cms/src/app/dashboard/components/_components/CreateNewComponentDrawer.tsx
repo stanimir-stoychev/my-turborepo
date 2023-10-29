@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useKey, useToggle } from 'react-use';
@@ -11,6 +11,7 @@ import { CreateNewComponentForm } from './Forms';
 import { DescriptionField, NameField, SeoDescriptionField, SeoNameField } from './Fields';
 import { useDashboardComponentsContext } from './Context';
 import { HtmlTree } from './HtmlTree';
+import type { THtmlComponent } from './types';
 
 export function CreateNewComponentDrawerOpenButton() {
     const [isCreateNewDrawerOpen, setIsCreateNewDrawerOpen] = useDashboardComponentsContext().isCreateNewDrawerOpen;
@@ -90,6 +91,21 @@ export function CreateNewComponentDrawer() {
 
     useKey('Escape', closeDrawer, { event: 'keydown' });
 
+    const [htmlEntity, setHtmlEntity] = useState<THtmlComponent>({
+        html: [
+            {
+                htmlProps: { component: 'p' },
+                html: ['hello world 3'],
+            },
+            'hello world',
+            {
+                htmlProps: { component: 'p' },
+                html: ['hello world 2'],
+            },
+            'hello world again',
+        ],
+    });
+
     return (
         <aside
             className={clsx('fixed top-0 left-0 w-screen h-screen transition-all opacity-1 z-30', {
@@ -110,7 +126,17 @@ export function CreateNewComponentDrawer() {
                         </Section>
                         <SeoSection />
                         <Section title="HTML*">
-                            <HtmlTree />
+                            <HtmlTree
+                                isRoot
+                                entity={htmlEntity}
+                                updateEntity={(updates) => {
+                                    console.log({ updates });
+                                    setHtmlEntity((currentHtmlEntity) => ({
+                                        ...currentHtmlEntity,
+                                        ...updates,
+                                    }));
+                                }}
+                            />
                         </Section>
                         {/* <Section title="Categories">
                             <div className="h-96 filler-div" />
