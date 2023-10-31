@@ -1,6 +1,7 @@
 import { SUPPORTED_HTML_TAGS } from './constants';
 import type { TextInput } from '~/components';
 import type { THtmlComponent } from '../types';
+import { isEmptyComponent, isSingleStringHtml } from './types';
 
 export const HtmlTreeUtils = {
     wrapIfText: (htmlEntity: THtmlComponent['html'][number]): THtmlComponent => {
@@ -72,4 +73,18 @@ export const HtmlTreeUtils = {
                 ...updates,
             };
         }),
+
+    stringifyEntity: (entity: THtmlComponent) => {
+        return {
+            htmlProps: entity.htmlProps && JSON.stringify(entity.htmlProps),
+            html: JSON.stringify(
+                entity.html.map((child) => {
+                    if (typeof child === 'string') return child;
+                    if (isSingleStringHtml(child)) return child.html[0];
+                    if (isEmptyComponent(child)) return undefined;
+                    return child;
+                }),
+            ),
+        };
+    },
 } as const;

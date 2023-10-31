@@ -8,7 +8,7 @@ import { useKey, useToggle } from 'react-use';
 import { AwesomeIcon } from '~/components';
 
 import { CreateNewComponentForm } from './Forms';
-import { DescriptionField, NameField, SeoDescriptionField, SeoNameField } from './Fields';
+import { ComponentHtmlField, DescriptionField, NameField, SeoDescriptionField, SeoNameField } from './Fields';
 import { useDashboardComponentsContext } from './Context';
 import { HtmlTree } from './HtmlTree';
 import type { THtmlComponent } from './types';
@@ -126,16 +126,18 @@ export function CreateNewComponentDrawer() {
                         </Section>
                         <SeoSection />
                         <Section title="HTML*">
-                            <HtmlTree
+                            <ComponentHtmlField.FormField />
+                            {/* <HtmlTree
                                 isRoot
                                 entity={htmlEntity}
                                 updateEntity={(updates) => {
+                                    console.log('updates', updates);
                                     setHtmlEntity((currentHtmlEntity) => ({
                                         ...currentHtmlEntity,
                                         ...updates,
                                     }));
                                 }}
-                            />
+                            /> */}
                         </Section>
                         {/* <Section title="Categories">
                             <div className="h-96 filler-div" />

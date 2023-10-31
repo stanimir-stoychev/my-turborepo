@@ -15,7 +15,7 @@ export function DaisyUiTreeNode(props: { children: React.ReactNode[]; title: Rea
 
     return (
         <Wrapper isRoot={isRoot}>
-            <details>
+            <details className="my-1">
                 <summary>{title}</summary>
                 <ul>
                     {children.map((child, index) => (
