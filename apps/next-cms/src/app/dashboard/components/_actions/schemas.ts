@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { TPrettify } from '~/types';
 
 // TComponentEntity (domain)
 const zBaseHtmlSchema = z.object({
@@ -10,35 +11,40 @@ const zBaseHtmlSchema = z.object({
             id: z.string().optional(),
             className: z.string().optional(),
             style: z.string().optional(),
+            component: z.string().optional(),
         })
         .optional(),
 });
 
-type TzComponentEntity = z.infer<typeof zBaseHtmlSchema> & {
-    html: (string | TzComponentEntity)[];
-};
+type TzComponentEntity = TPrettify<
+    z.infer<typeof zBaseHtmlSchema> & {
+        html: (string | TPrettify<Pick<TzComponentEntity, 'html' | 'htmlProps'>>)[];
+    }
+>;
 
 const zPartialBaseHtmlSchema = zBaseHtmlSchema.omit({ id: true, name: true }).partial();
 const zComponentEntity: z.ZodType<TzComponentEntity> = zBaseHtmlSchema.extend({
     html: z.lazy(() => z.union([z.string(), zComponentEntity]).array()),
 });
 
-export type TzNewComponentEntity = z.infer<typeof zPartialBaseHtmlSchema> & {
-    id: number;
-    name: string;
-    html: (string | TzComponentEntity)[];
-};
+export type TzNewComponentEntity = TPrettify<
+    z.infer<typeof zPartialBaseHtmlSchema> & {
+        name: string;
+        html: (string | TPrettify<Pick<TzNewComponentEntity, 'html' | 'htmlProps'>>)[];
+    }
+>;
 export const zNewComponentEntity: z.ZodType<TzNewComponentEntity> = zPartialBaseHtmlSchema.extend({
-    id: z.number(),
     name: z.string(),
     html: z.lazy(() => z.union([z.string(), zComponentEntity]).array()),
 });
 
-export type TzUpdateComponentEntity = z.infer<typeof zPartialBaseHtmlSchema> & {
-    id: number;
-    name?: string;
-    html?: (string | TzComponentEntity)[];
-};
+export type TzUpdateComponentEntity = TPrettify<
+    z.infer<typeof zPartialBaseHtmlSchema> & {
+        id: number;
+        name?: string;
+        html?: (string | TPrettify<Pick<TzComponentEntity, 'html' | 'htmlProps'>>)[];
+    }
+>;
 export const zUpdateComponentEntity: z.ZodType<TzUpdateComponentEntity> = zPartialBaseHtmlSchema.extend({
     id: z.number(),
     name: z.string().optional(),
