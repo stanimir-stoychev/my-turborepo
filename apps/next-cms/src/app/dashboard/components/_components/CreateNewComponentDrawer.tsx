@@ -117,9 +117,9 @@ export function CreateNewComponentDrawer() {
                 onClick={closeDrawer}
                 className="absolute left-0 right-0 w-full h-full cursor-default bg-slate-700/70"
             />
-            <main className="absolute right-0 h-full p-4 overflow-auto rounded-l bg-base-100 min-w-56 md:min-w-96">
+            <main className="absolute right-0 w-2/3 h-full p-4 overflow-auto rounded-l bg-base-100">
                 {isCreateNewDrawerOpen && (
-                    <CreateNewComponentForm className="flex flex-col gap-2 max-w-56 md:max-w-96">
+                    <CreateNewComponentForm className="flex flex-col gap-2">
                         <Section title="Name* and description" contentProps={{ className: 'flex flex-col gap-2' }}>
                             <NameField.FormField name="name" label="Name*" registerOptions={{ required: true }} />
                             <DescriptionField.FormField name="description" />
@@ -131,7 +131,6 @@ export function CreateNewComponentDrawer() {
                                 isRoot
                                 entity={htmlEntity}
                                 updateEntity={(updates) => {
-                                    console.log('updates', updates);
                                     setHtmlEntity((currentHtmlEntity) => ({
                                         ...currentHtmlEntity,
                                         ...updates,

@@ -1,16 +1,38 @@
 'use client';
 
 import { useState } from 'react';
+import clsx from 'clsx';
 
-import { AwesomeIcon, TextInput } from '~/components';
+import { AwesomeIcon, TextArea, TextInput } from '~/components';
 import { DaisyUiTreeNode } from './DaisyUiTreeNode';
 import { HtmlTreeUtils } from './utils';
 import { type TBaseProps, isSingleStringHtml, isEmptyComponent } from './types';
 import { useTrackEntityProp } from './hooks';
 
-const COMMON_BTN_CLASSES = 'opacity-20 btn btn-xs btn-ghost hover:opacity-100 focus:opacity-100 transition-opacity';
+const COMMON_BTN_CLASSES =
+    'opacity-20 btn btn-xs btn-ghost hover:opacity-100 active:opacity-100 focus:opacity-100 transition-opacity';
+const COMMON_INPUT_CLASSES = 'w-96 placeholder:italic placeholder:font-light';
+
+function TreeButton({
+    icon,
+    tooltip,
+    onClick,
+}: {
+    icon: React.ComponentProps<typeof AwesomeIcon>['icon'];
+    tooltip?: string;
+    onClick?: () => void;
+}) {
+    return (
+        <div className="tooltip" data-tip={tooltip}>
+            <button type="button" className={COMMON_BTN_CLASSES} onClick={onClick}>
+                <AwesomeIcon icon={icon} />
+            </button>
+        </div>
+    );
+}
 
 function LonelyHtmlTreeNode(props: {
+    helloWorld: () => void;
     deleteSelf?: () => void;
     trackedComponent: ReturnType<typeof useTrackEntityProp>;
     trackedHtml: ReturnType<typeof useTrackEntityProp>;
@@ -25,12 +47,16 @@ function LonelyHtmlTreeNode(props: {
         value: [html, setHtml],
     } = props.trackedHtml;
 
-    const [editComponentInTitle, setEditComponentInTitle] = useState(false);
+    const [editComponentInTitle, setEditComponentInTitle] = useState(!html);
+    const [useTextArea, setUseTextArea] = useState(false);
+
+    const EditHtmlComponent = !useTextArea || editComponentInTitle ? TextInput : TextArea;
+    const UserInputComponent = editComponentInTitle ? TextInput : EditHtmlComponent;
 
     return (
         <div className="menu">
             <div className="flex items-start gap-2">
-                <label className="transition-opacity swap swap-flip opacity-20 btn btn-xs btn-ghost hover:opacity-100 focus:opacity-100">
+                <label className={clsx(COMMON_BTN_CLASSES, 'swap swap-flip')}>
                     {/* this hidden checkbox controls the state */}
                     <input
                         type="checkbox"
@@ -38,41 +64,52 @@ function LonelyHtmlTreeNode(props: {
                         onChange={(event) => setEditComponentInTitle(event.currentTarget.checked)}
                     />
 
-                    <div className="swap-on tooltip" data-tip="Text">
+                    <div className="swap-on tooltip" data-tip="HTML (text)">
                         <AwesomeIcon icon="feather" />
                     </div>
                     <div className="swap-off tooltip" data-tip="HTML Tag">
                         <AwesomeIcon icon="box" />
                     </div>
                 </label>
-                <TextInput
-                    {...HtmlTreeUtils.getInputProps({
-                        isValid: !editComponentInTitle ? isValidHtml : isValidComponent,
-                        message: !editComponentInTitle ? whyInvalidHtml : whyInvalidComponent,
-                        placeholder: !editComponentInTitle ? 'Hello world' : 'div, p, span, etc.',
-                        value: !editComponentInTitle ? html : component,
-                        setValue: !editComponentInTitle ? setHtml : setComponent,
-                        className: editComponentInTitle ? 'font-bold' : 'font-lighter',
-                    })}
-                />
-                {props.deleteSelf && (
-                    <div className="tooltip" data-tip="Delete">
-                        <button type="button" className={COMMON_BTN_CLASSES} onClick={props.deleteSelf}>
-                            <AwesomeIcon icon="trash" />
-                        </button>
-                    </div>
-                )}
+                <div className="relative">
+                    <UserInputComponent
+                        {...(HtmlTreeUtils.getInputProps({
+                            isValid: !editComponentInTitle ? isValidHtml : isValidComponent,
+                            message: !editComponentInTitle ? whyInvalidHtml : whyInvalidComponent,
+                            placeholder: !editComponentInTitle ? 'Hello world' : 'div, p, span, etc.',
+                            value: !editComponentInTitle ? html : component,
+                            setValue: !editComponentInTitle ? setHtml : setComponent,
+                            className: clsx(COMMON_INPUT_CLASSES, editComponentInTitle ? 'font-bold' : 'font-lighter'),
+                        }) as any)}
+                    />
+                    {!editComponentInTitle && (
+                        <div className="absolute top-0 right-0">
+                            <TreeButton
+                                icon="up-right-and-down-left-from-center"
+                                onClick={() => setUseTextArea((isUsingATextArea) => !isUsingATextArea)}
+                            />
+                        </div>
+                    )}
+                </div>
+                <div className="space-x-2">
+                    {!editComponentInTitle && (
+                        <TreeButton icon="plus" tooltip="Hello world" onClick={props.helloWorld} />
+                    )}
+                    {editComponentInTitle && !!html && <TreeButton icon="info" tooltip={html} />}
+                    {props.deleteSelf && <TreeButton icon="trash" onClick={props.deleteSelf} />}
+                </div>
             </div>
         </div>
     );
 }
 
 export function HtmlTree({
+    open = true,
     isRoot,
     entity,
     updateEntity,
     deleteSelf,
-}: { isRoot?: boolean; deleteSelf?: () => void } & TBaseProps) {
+}: { open?: boolean; isRoot?: boolean; deleteSelf?: () => void } & TBaseProps) {
     const {
         isValid: [isValidComponent, whyInvalidComponent],
         value: [component, setComponent],
@@ -93,13 +130,19 @@ export function HtmlTree({
 
     const helloWorld = () =>
         updateEntity({
-            html: [...entity.html, { html: ['Hello world!'] }],
+            html: [...entity.html, HtmlTreeUtils.wrapIfText('Hello world!')],
+        });
+
+    const helloWorldFromLonelyTreeNode = () =>
+        updateEntity({
+            html: [HtmlTreeUtils.wrapIfText(''), HtmlTreeUtils.wrapIfText('Hello world!')],
         });
 
     if (isSingleStringHtml(entity) || isEmptyComponent(entity)) {
         return (
             <LonelyHtmlTreeNode
                 deleteSelf={deleteSelf}
+                helloWorld={helloWorldFromLonelyTreeNode}
                 trackedComponent={{
                     isValid: [isValidComponent, whyInvalidComponent],
                     value: [component, setComponent],
@@ -114,6 +157,7 @@ export function HtmlTree({
 
     return (
         <DaisyUiTreeNode
+            open={open}
             isRoot={isRoot}
             title={
                 <>
@@ -124,22 +168,12 @@ export function HtmlTree({
                             placeholder: 'div, p, span, etc.',
                             value: component,
                             setValue: setComponent,
-                            className: 'font-bold',
+                            className: clsx(COMMON_INPUT_CLASSES, 'font-bold'),
                         })}
                     />
                     <div className="space-x-2">
-                        <div className="tooltip" data-tip="Hello world">
-                            <button type="button" className={COMMON_BTN_CLASSES} onClick={helloWorld}>
-                                <AwesomeIcon icon="plus" />
-                            </button>
-                        </div>
-                        {deleteSelf && (
-                            <div className="tooltip" data-tip="Delete">
-                                <button type="button" className={COMMON_BTN_CLASSES} onClick={deleteSelf}>
-                                    <AwesomeIcon icon="trash" />
-                                </button>
-                            </div>
-                        )}
+                        <TreeButton icon="plus" tooltip="Hello world" onClick={helloWorld} />
+                        {deleteSelf && <TreeButton icon="trash" tooltip="Delete" onClick={deleteSelf} />}
                     </div>
                 </>
             }

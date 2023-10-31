@@ -24,7 +24,6 @@ export function ComponentHtmlField({
     const prevHtml = usePrevious(value.html);
 
     useEffect(() => {
-        console.log({ prevHtml, current: value.html });
         if (prevHtmlProps !== value.htmlProps) setHtmlProps(JSON.stringify(value.htmlProps));
         if (prevHtml !== value.html) setHtml(JSON.stringify(value.html));
     }, [prevHtmlProps, prevHtml, value.htmlProps, value.html]);
@@ -51,17 +50,19 @@ ComponentHtmlField.FormField = (props: Omit<React.ComponentProps<typeof Componen
     const htmlProps = watch('htmlProps');
     const html = watch('html');
 
-    const entity = useMemo(() => {
-        console.log('Form field memo:\t', { htmlProps, html });
-        return { htmlProps, html: html ?? [] };
-    }, [htmlProps, html]);
+    const entity = useMemo(
+        () => ({
+            htmlProps,
+            html: html ?? [],
+        }),
+        [htmlProps, html],
+    );
 
     return (
         <ComponentHtmlField
             {...props}
             value={entity}
             setValue={(updates) => {
-                console.log('Form field setValue:\t', { updates });
                 if (updates.htmlProps) {
                     setValue('htmlProps', updates.htmlProps);
                 }
