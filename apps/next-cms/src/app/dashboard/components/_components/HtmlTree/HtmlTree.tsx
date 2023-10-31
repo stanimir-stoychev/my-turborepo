@@ -131,12 +131,12 @@ export function HtmlTree({
 
     const helloWorld = () =>
         updateEntity({
-            html: [...entity.html, 'Hello world!'],
+            html: [...entity.html, HtmlTreeUtils.wrapIfText('Hello world!')],
         });
 
     const helloWorldFromLonelyTreeNode = () =>
         updateEntity({
-            html: [HtmlTreeUtils.wrapIfText(''), 'Hello world!'],
+            html: [HtmlTreeUtils.wrapIfText(''), HtmlTreeUtils.wrapIfText('Hello world!')],
         });
 
     if (isSingleStringHtml(entity) || isEmptyComponent(entity)) {
