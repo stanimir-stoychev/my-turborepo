@@ -36,7 +36,7 @@ export function CreateNewComponentForm({ onSubmit, ...rest }: TCreateNewComponen
 
     const handleSubmit = methods.handleSubmit((data, event) => {
         onSubmit?.(data, event);
-        createNewComponent.execute({ ...data, html: data.html ?? '' });
+        createNewComponent.execute(data);
     });
 
     return (
