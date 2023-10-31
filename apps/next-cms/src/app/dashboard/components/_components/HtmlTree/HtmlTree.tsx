@@ -86,6 +86,7 @@ function LonelyHtmlTreeNode(props: {
                         <div className="absolute top-0 right-0">
                             <TreeButton
                                 icon="up-right-and-down-left-from-center"
+                                tooltip={useTextArea ? 'Use text input' : 'Use textarea'}
                                 onClick={() => setUseTextArea((isUsingATextArea) => !isUsingATextArea)}
                             />
                         </div>
@@ -96,7 +97,7 @@ function LonelyHtmlTreeNode(props: {
                         <TreeButton icon="plus" tooltip="Hello world" onClick={props.helloWorld} />
                     )}
                     {editComponentInTitle && !!html && <TreeButton icon="info" tooltip={html} />}
-                    {props.deleteSelf && <TreeButton icon="trash" onClick={props.deleteSelf} />}
+                    {props.deleteSelf && <TreeButton icon="trash" tooltip="Delete" onClick={props.deleteSelf} />}
                 </div>
             </div>
         </div>
