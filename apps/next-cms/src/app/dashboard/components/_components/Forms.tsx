@@ -1,8 +1,11 @@
 'use client';
 
+import { useEffect } from 'react';
+import { usePrevious } from 'react-use';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
+import { useToaster } from '~/layout/Toaster';
 import { useDashboardComponentsContext } from './Context';
 
 import type { TPrettify } from '~/types';
@@ -21,12 +24,20 @@ export namespace TCreateNewComponentForm {
     export type ComponentProps = TPrettify<
         BaseHtmlFormProps & {
             onSubmit?: Parameters<UseFormHookData['handleSubmit']>[0];
+            onSuccessfulSubmit?: (args: {
+                payload: TCreateNewComponentServerAction.TSchema;
+                response: TCreateNewComponentServerAction.Data;
+            }) => void;
             defaultValues?: UseFormHookParams['defaultValues'];
         }
     >;
 }
 
-export function CreateNewComponentForm({ onSubmit, ...rest }: TCreateNewComponentForm.ComponentProps) {
+export function CreateNewComponentForm({
+    onSubmit,
+    onSuccessfulSubmit,
+    ...rest
+}: TCreateNewComponentForm.ComponentProps) {
     const {
         apiData: { createNewComponent },
     } = useDashboardComponentsContext();
@@ -38,6 +49,24 @@ export function CreateNewComponentForm({ onSubmit, ...rest }: TCreateNewComponen
         onSubmit?.(data, event);
         createNewComponent.execute(data);
     });
+
+    const { pushToast } = useToaster();
+    const prevStatus = usePrevious(createNewComponent.status);
+    useEffect(() => {
+        if (createNewComponent.status === prevStatus) return;
+        if (createNewComponent.status === 'hasSucceeded' && createNewComponent.result.data) {
+            onSuccessfulSubmit?.({
+                payload: methods.getValues(),
+                response: createNewComponent.result.data,
+            });
+            pushToast({
+                type: 'success',
+                message: 'Component created successfully',
+            });
+            methods.reset();
+            createNewComponent.reset();
+        }
+    }, [createNewComponent.result, createNewComponent.status, prevStatus]);
 
     return (
         <FormProvider {...methods}>

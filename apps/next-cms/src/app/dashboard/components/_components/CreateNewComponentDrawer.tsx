@@ -91,21 +91,6 @@ export function CreateNewComponentDrawer() {
 
     useKey('Escape', closeDrawer, { event: 'keydown' });
 
-    const [htmlEntity, setHtmlEntity] = useState<THtmlComponent>({
-        html: [
-            {
-                htmlProps: { component: 'p' },
-                html: ['hello world 3'],
-            },
-            'hello world',
-            {
-                htmlProps: { component: 'p' },
-                html: ['hello world 2'],
-            },
-            'hello world again',
-        ],
-    });
-
     return (
         <aside
             className={clsx('fixed top-0 left-0 w-screen h-screen transition-all opacity-1 z-30', {
@@ -119,7 +104,7 @@ export function CreateNewComponentDrawer() {
             />
             <main className="absolute right-0 w-2/3 h-full p-4 overflow-auto rounded-l bg-base-100">
                 {isCreateNewDrawerOpen && (
-                    <CreateNewComponentForm className="flex flex-col gap-2">
+                    <CreateNewComponentForm className="flex flex-col gap-2" onSuccessfulSubmit={closeDrawer}>
                         <Section title="Name* and description" contentProps={{ className: 'flex flex-col gap-2' }}>
                             <NameField.FormField name="name" label="Name*" registerOptions={{ required: true }} />
                             <DescriptionField.FormField name="description" />
@@ -127,16 +112,6 @@ export function CreateNewComponentDrawer() {
                         <SeoSection />
                         <Section title="HTML*">
                             <ComponentHtmlField.FormField />
-                            {/* <HtmlTree
-                                isRoot
-                                entity={htmlEntity}
-                                updateEntity={(updates) => {
-                                    setHtmlEntity((currentHtmlEntity) => ({
-                                        ...currentHtmlEntity,
-                                        ...updates,
-                                    }));
-                                }}
-                            /> */}
                         </Section>
                         {/* <Section title="Categories">
                             <div className="h-96 filler-div" />

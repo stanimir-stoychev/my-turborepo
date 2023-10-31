@@ -18,7 +18,7 @@ const useInfiniteFindComponents = ({
 }): TDashboardComponentsPage['apiData']['findComponents'] => {
     const { execute, result, status } = useAction(serverAction);
     const [data, setData] = useState([] as TDashboardComponentsPage['apiData']['findComponents']['data']);
-    const [prevSearchTerm, setPrevSearchTerm] = useState(searchTerm);
+    const [prevSearchTerm, setPrevSearchTerm] = useState<typeof searchTerm>('invalid search to trigger flow...');
 
     const fetchNextPage = useCallback(() => {
         if (status === 'executing') return;
@@ -30,16 +30,13 @@ const useInfiniteFindComponents = ({
 
     useEffect(() => {
         const newData = result.data;
+        const lastEntry = data[data.length - 1];
 
         if (!newData) return;
-        if (data[data.length - 1] === newData) return;
+        if (lastEntry?.nextCursor === newData?.nextCursor && lastEntry?.total === newData.total) return;
 
         setData((prevData) => [...prevData, newData]);
     }, [result.data]);
-
-    useEffect(() => {
-        fetchNextPage();
-    }, []);
 
     useEffect(() => {
         if (prevSearchTerm === searchTerm) return;
