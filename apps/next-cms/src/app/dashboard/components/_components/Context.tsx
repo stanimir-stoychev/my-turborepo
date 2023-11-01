@@ -69,6 +69,7 @@ export function DashboardComponentsProvider({
         serverActions,
         apiData: {
             createNewComponent: useAction(serverActions.createNewComponent),
+            updateComponent: useAction(serverActions.updateComponent),
             findComponents: useInfiniteFindComponents({
                 searchTerm: searchTerm[0],
                 serverAction: serverActions.findComponents,

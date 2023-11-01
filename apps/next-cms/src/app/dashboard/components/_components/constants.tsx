@@ -9,6 +9,7 @@ export const DEFAULT_CONTEXT: TDashboardComponentsPage = {
     isCreateNewDrawerOpen: [false, noop],
     serverActions: {
         createNewComponent: noop as any,
+        updateComponent: noop as any,
         findComponents: noop as any,
     },
     apiData: {
@@ -18,9 +19,15 @@ export const DEFAULT_CONTEXT: TDashboardComponentsPage = {
             result: {},
             status: 'idle',
         },
+        updateComponent: {
+            execute: noop,
+            reset: noop,
+            result: {},
+            status: 'idle',
+        },
         findComponents: {
             data: [],
-            fetchNextPage: () => {},
+            fetchNextPage: noop,
             hasNextPage: false,
             isLoading: false,
         },

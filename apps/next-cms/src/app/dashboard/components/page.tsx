@@ -1,5 +1,5 @@
 import { DashboardTitle } from '~/layout';
-import { createNewComponentServerAction, findComponentsServerAction } from './_actions';
+import { createNewComponentServerAction, findComponentsServerAction, updateComponentServerAction } from './_actions';
 import {
     DashboardComponentsProvider,
     SearchField,
@@ -15,6 +15,7 @@ export default function DashboardComponentsPage() {
             <DashboardComponentsProvider
                 serverActions={{
                     createNewComponent: createNewComponentServerAction,
+                    updateComponent: updateComponentServerAction,
                     findComponents: findComponentsServerAction,
                 }}
             >

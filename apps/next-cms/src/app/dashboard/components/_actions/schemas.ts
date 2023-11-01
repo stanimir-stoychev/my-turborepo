@@ -40,7 +40,7 @@ export const zNewComponentEntity: z.ZodType<TzNewComponentEntity> = zPartialBase
 });
 
 export type TzUpdateComponentEntity = TPrettify<
-    z.infer<typeof zPartialBaseHtmlSchema> & {
+    Omit<z.infer<typeof zPartialBaseHtmlSchema>, 'html'> & {
         id: number;
         name?: string;
         html?: (string | TPrettify<Pick<TzBaseHtmlRecursive, 'html' | 'htmlProps'>>)[];
@@ -49,7 +49,7 @@ export type TzUpdateComponentEntity = TPrettify<
 export const zUpdateComponentEntity: z.ZodType<TzUpdateComponentEntity> = zPartialBaseHtmlSchema.extend({
     id: z.number(),
     name: z.string().optional(),
-    html: z.lazy(() => z.array(z.union([z.string(), zBaseHtmlRecursive]))),
+    html: z.lazy(() => z.union([z.string(), zBaseHtmlRecursive]).array().optional()),
 });
 
 export const zFindComponentQuery = z.object({

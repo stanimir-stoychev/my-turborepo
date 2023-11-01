@@ -1,7 +1,11 @@
 import { GRID_SIZES } from './constants';
 import type { useAction } from 'next-safe-action/hook';
 import type { TComponentEntity } from '~/server/domains/components';
-import type { TCreateNewComponentServerAction, TFindComponentsServerAction } from '../_actions';
+import type {
+    TCreateNewComponentServerAction,
+    TFindComponentsServerAction,
+    TUpdateComponentServerAction,
+} from '../_actions';
 
 export type TGridSize = (typeof GRID_SIZES)[number];
 
@@ -13,12 +17,17 @@ export type TDashboardComponentsPage = {
 
     serverActions: {
         createNewComponent: TCreateNewComponentServerAction.Action;
+        updateComponent: TUpdateComponentServerAction.Action;
         findComponents: TFindComponentsServerAction.Action;
     };
 
     apiData: {
         createNewComponent: ReturnType<
             typeof useAction<TCreateNewComponentServerAction.Schema, TCreateNewComponentServerAction.Data>
+        >;
+
+        updateComponent: ReturnType<
+            typeof useAction<TUpdateComponentServerAction.Schema, TUpdateComponentServerAction.Data>
         >;
 
         findComponents: {
