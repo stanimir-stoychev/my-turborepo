@@ -10,7 +10,7 @@ import { usePageContext } from '../_context';
 
 export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttributes<HTMLFormElement>) {
     const { pushToast } = useToaster();
-    const { dispatch, state } = usePageContext();
+    const { dispatch } = usePageContext();
 
     const inputRef = useRef<HTMLInputElement>(null);
     const [searchTerm, setSearchTerm] = useState<string>();

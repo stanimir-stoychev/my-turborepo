@@ -87,34 +87,60 @@ export function useBuiltContext(): TPageContext {
         const status = SAFE_ACTION_STATUS_MAPPER[safeCreateNewComponentAction.status];
         const data = safeCreateNewComponentAction.result.data;
 
+        if (
+            reactState.createNewComponent.api.status === status &&
+            JSON.stringify(reactState.createNewComponent.api.data) ===
+                JSON.stringify(safeCreateNewComponentAction.result.data)
+        )
+            return;
+
         reactDispatch({
             type: 'create-new-component-api-change',
             payload: { data, status },
         });
-    }, [safeCreateNewComponentAction.result, safeCreateNewComponentAction.status]);
+    }, [safeCreateNewComponentAction.status]);
 
     useEffect(() => {
         const status = SAFE_ACTION_STATUS_MAPPER[safeFindComponentsAction.status];
         const data = safeFindComponentsAction.result.data;
 
+        if (
+            reactState.findComponents.api.status === status &&
+            JSON.stringify(reactState.findComponents.api.data) === JSON.stringify(safeFindComponentsAction.result.data)
+        )
+            return;
+
         reactDispatch({
             type: 'search-components-api-change',
             payload: { data, status },
         });
-    }, [safeFindComponentsAction.result, safeFindComponentsAction.status]);
+    }, [safeFindComponentsAction.status]);
 
     useEffect(() => {
         const status = SAFE_ACTION_STATUS_MAPPER[safeUpdateComponentAction.status];
         const data = safeUpdateComponentAction.result.data;
 
+        if (
+            reactState.editComponent.api.status === status &&
+            JSON.stringify(reactState.editComponent.api.data) === JSON.stringify(safeUpdateComponentAction.result.data)
+        )
+            return;
+
         reactDispatch({
             type: 'updated-component-api-change',
             payload: { data, status },
         });
-    }, [safeUpdateComponentAction.result, safeUpdateComponentAction.status]);
+    }, [safeUpdateComponentAction.status]);
 
     useEffectOnce(() => {
-        dispatch({ type: 'search-components' });
+        if (reactState.findComponents.api.data || reactState.findComponents.api.status !== 'idle') {
+            return;
+        }
+
+        dispatch({
+            type: 'search-components',
+            payload: undefined,
+        });
     });
 
     return {
