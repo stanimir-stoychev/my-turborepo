@@ -47,7 +47,7 @@ export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttr
         setSearchTerm(searchValue);
         dispatch({
             type: 'search-components',
-            payload: { any: searchValue },
+            payload: { any: searchValue || '*' },
         });
     };
 
