@@ -1,7 +1,7 @@
 import { SUPPORTED_HTML_TAGS } from './constants';
+import { isEmptyComponent, isSingleStringHtml } from './types';
 import type { TextInput } from '~/components';
 import type { THtmlComponent } from '../types';
-import { isEmptyComponent, isSingleStringHtml } from './types';
 
 export const HtmlTreeUtils = {
     wrapIfText: (htmlEntity: THtmlComponent['html'][number]): THtmlComponent => {

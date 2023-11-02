@@ -7,10 +7,10 @@ import { twMerge } from 'tailwind-merge';
 import { AwesomeIcon } from '~/components';
 
 import { GRID_SIZES, GRID_SIZES_ICON_PROPS } from './constants';
-import { useDashboardComponentsContext } from './Context';
+import { usePageContext } from '../_context';
 
 export function GridSizeToggle({ className, ...rest }: React.HtmlHTMLAttributes<HTMLDivElement>) {
-    const [currentSize, setSize] = useDashboardComponentsContext().gridSize;
+    const gridSize = GRID_SIZES[0];
     return (
         <aside
             aria-label="Size toggle"
@@ -23,8 +23,8 @@ export function GridSizeToggle({ className, ...rest }: React.HtmlHTMLAttributes<
             {GRID_SIZES.map((size) => (
                 <button
                     key={size}
-                    className={clsx('tab tab-sm', size === currentSize && 'tab-active')}
-                    onClick={() => setSize(size)}
+                    className={clsx('tab tab-sm', size === gridSize && 'tab-active')}
+                    // onClick={() => setSize(size)}
                 >
                     <AwesomeIcon {...GRID_SIZES_ICON_PROPS[size]} />
                 </button>
@@ -34,12 +34,9 @@ export function GridSizeToggle({ className, ...rest }: React.HtmlHTMLAttributes<
 }
 
 export function Grid({ children, className, ...rest }: React.HtmlHTMLAttributes<HTMLUListElement>) {
-    const {
-        gridSize: [gridSize],
-        apiData: {
-            findComponents: { data },
-        },
-    } = useDashboardComponentsContext();
+    const { dispatch, state } = usePageContext();
+    const data = state.findComponents.api.data;
+    const gridSize = GRID_SIZES[0];
 
     return (
         <ul
@@ -53,22 +50,27 @@ export function Grid({ children, className, ...rest }: React.HtmlHTMLAttributes<
             )}
             {...rest}
         >
-            {data.map((page, index) => (
-                <Fragment key={index}>
-                    {page.items.map((component) => (
-                        <li key={component.id} className="shadow-xl card bg-base-200">
-                            <div className="card-body">
-                                <h2 className="card-title">{component.name}</h2>
-                                <p>{component.description}</p>
-                                <div className="justify-end card-actions">
-                                    <button className="btn btn-primary btn-sm">
-                                        View <AwesomeIcon icon="external-link-alt" />
-                                    </button>
-                                </div>
-                            </div>
-                        </li>
-                    ))}
-                </Fragment>
+            {data?.items.map((component) => (
+                <li key={component.id} className="shadow-xl card bg-base-200">
+                    <div className="card-body">
+                        <h2 className="card-title">{component.name}</h2>
+                        <p>{component.description}</p>
+                        <div className="justify-end card-actions">
+                            <button
+                                className="btn btn-primary btn-sm"
+                                type="button"
+                                onClick={() =>
+                                    dispatch({
+                                        type: 'select-component-to-edit',
+                                        payload: component,
+                                    })
+                                }
+                            >
+                                View <AwesomeIcon icon="external-link-alt" />
+                            </button>
+                        </div>
+                    </div>
+                </li>
             ))}
         </ul>
     );

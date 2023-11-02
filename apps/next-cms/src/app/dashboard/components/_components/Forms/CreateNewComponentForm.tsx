@@ -6,17 +6,12 @@ import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
 import { useToaster } from '~/layout/Toaster';
-import { useDashboardComponentsContext } from '../Context';
+import { usePageContext } from '../../_context';
 
 import type { TPrettify } from '~/types';
 import type { TCreateNewComponentServerAction } from '../../_actions';
-import { TDashboardComponentsPage } from '../types';
 
-type UseFromHook = typeof useForm<
-    TCreateNewComponentServerAction.TSchema,
-    TDashboardComponentsPage['apiData']['createNewComponent']
->;
-
+type UseFromHook = typeof useForm<TCreateNewComponentServerAction.TSchema>;
 type UseFormHookData = ReturnType<UseFromHook>;
 
 type BaseHtmlFormProps = Omit<
@@ -36,35 +31,37 @@ type ComponentProps = TPrettify<
 >;
 
 export function CreateNewComponentForm({ onSubmit, onSuccessfulSubmit, ...rest }: ComponentProps) {
-    const {
-        apiData: { createNewComponent },
-    } = useDashboardComponentsContext();
+    const { dispatch, state } = usePageContext();
     const methods: UseFormHookData = useForm({
-        context: createNewComponent,
+        defaultValues: state.createNewComponent.defaultValues,
     });
 
     const handleSubmit = methods.handleSubmit((data, event) => {
         onSubmit?.(data, event);
-        createNewComponent.execute(data);
+        dispatch({
+            type: 'create-new-component',
+            payload: data,
+        });
     });
 
+    const dataSource = state.createNewComponent.api;
     const { pushToast } = useToaster();
-    const prevStatus = usePrevious(createNewComponent.status);
+    const prevStatus = usePrevious(dataSource.status);
     useEffect(() => {
-        if (createNewComponent.status === prevStatus) return;
-        if (createNewComponent.status === 'hasSucceeded' && createNewComponent.result.data) {
+        if (dataSource.status === prevStatus) return;
+        if (dataSource.status === 'success' && dataSource.data) {
             onSuccessfulSubmit?.({
                 payload: methods.getValues(),
-                response: createNewComponent.result.data,
+                response: dataSource.data,
             });
             pushToast({
                 type: 'success',
                 message: 'Created successfully',
             });
             methods.reset();
-            createNewComponent.reset();
+            dispatch({ type: 'reset-create-new-component-api-data' });
         }
-    }, [createNewComponent.result, createNewComponent.status, prevStatus]);
+    }, [dataSource.data, dataSource.status, prevStatus]);
 
     return (
         <FormProvider {...methods}>

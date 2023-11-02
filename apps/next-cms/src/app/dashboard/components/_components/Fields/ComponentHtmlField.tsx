@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { noop } from '~/utils/static';
-import { HtmlTree } from '../HtmlTree';
-import type { THtmlComponent } from '../types';
 import { usePrevious } from 'react-use';
+import { useFormContext } from 'react-hook-form';
+
+import { noop } from '~/utils/static';
+
+import { HtmlTree } from '../HtmlTree';
 import { HtmlTreeUtils } from '../HtmlTree/utils';
+import type { THtmlComponent } from '../types';
 
 export function ComponentHtmlField({
     name = 'component-html-',

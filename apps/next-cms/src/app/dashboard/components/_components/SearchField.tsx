@@ -1,21 +1,19 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { AwesomeIcon } from '~/components';
 import { useToaster } from '~/layout/Toaster';
 
-import { useDashboardComponentsContext } from './Context';
+import { usePageContext } from '../_context';
 
 export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttributes<HTMLFormElement>) {
     const { pushToast } = useToaster();
-    const [searchTerm, setSearchTerm] = useDashboardComponentsContext().searchTerm;
-    const [minSearchTermLength] = useDashboardComponentsContext().minSearchTermLength;
+    const { dispatch, state } = usePageContext();
 
     const inputRef = useRef<HTMLInputElement>(null);
-
-    const canClear = Boolean(searchTerm);
+    const [searchTerm, setSearchTerm] = useState<string>();
 
     const handleFocus = () => inputRef.current?.focus?.();
 
@@ -30,12 +28,6 @@ export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttr
         inputRef.current.value = searchTerm ?? '';
     };
 
-    const handleClear = () => {
-        setSearchTerm(undefined);
-        if (!inputRef.current) return;
-        inputRef.current.value = '';
-    };
-
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         onSubmit?.(event);
@@ -44,21 +36,19 @@ export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttr
         const formData = new FormData(form);
         const searchValue = formData.get('search')?.toString()?.trim();
 
-        if (!searchValue) {
-            // Reset...
-            setSearchTerm(searchValue);
-            return;
-        }
-
-        if (searchValue.length < minSearchTermLength) {
+        if (searchValue && searchValue.length < 3) {
             pushToast({
                 type: 'warning',
-                message: `Please enter at least ${minSearchTermLength} characters to search`,
+                message: 'Please enter at least 3 characters to search',
             });
             return;
         }
 
         setSearchTerm(searchValue);
+        dispatch({
+            type: 'search-components',
+            payload: { any: searchValue },
+        });
     };
 
     return (
@@ -75,11 +65,6 @@ export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttr
                 onBlur={handleInputBlur}
                 onKeyDown={handleEscapeKeyPress}
             />
-            {canClear && (
-                <button className="rounded-l-full btn btn-sm join-item btn-neutral" type="button" onClick={handleClear}>
-                    <AwesomeIcon icon="times" />
-                </button>
-            )}
         </form>
     );
 }

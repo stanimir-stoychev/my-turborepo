@@ -15,6 +15,24 @@ export type TDashboardComponentsPage = {
     searchTerm: [string | undefined, React.Dispatch<React.SetStateAction<string | undefined>>];
     isCreateNewDrawerOpen: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 
+    drawer: {
+        ['create-new-component']: {
+            isOpen: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+            defaultValues: [
+                TCreateNewComponentServerAction.TSchema,
+                React.Dispatch<React.SetStateAction<TCreateNewComponentServerAction.TSchema>>,
+            ];
+        };
+
+        ['update-component']: {
+            isOpen: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+            defaultValues: [
+                TUpdateComponentServerAction.TSchema,
+                React.Dispatch<React.SetStateAction<TUpdateComponentServerAction.TSchema>>,
+            ];
+        };
+    };
+
     serverActions: {
         createNewComponent: TCreateNewComponentServerAction.Action;
         updateComponent: TUpdateComponentServerAction.Action;

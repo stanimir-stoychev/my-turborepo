@@ -7,26 +7,29 @@ import { useKey, useToggle } from 'react-use';
 import { AwesomeIcon } from '~/components';
 
 import { usePageContext } from '../_context';
-import { CreateNewComponentForm } from './Forms';
+import { UpdateComponentForm } from './Forms';
 import { ComponentHtmlField, DescriptionField, NameField, SeoDescriptionField, SeoNameField } from './Fields';
 import { Drawer } from './Drawer';
 
-export function CreateNewComponentDrawerOpenButton() {
+export function UpdateComponentDrawerOpenButton() {
     const { dispatch, state } = usePageContext();
-    const isCreateNewDrawerOpen = state.createNewComponent.isDialogOpen;
-    const openDrawer = () =>
-        dispatch({
-            type: 'toggle-create-new-component-dialog',
-            payload: true,
-        });
+    const isDrawerOpen = !!state.editComponent.selected;
+    const closeDrawer = useCallback(
+        () =>
+            dispatch({
+                type: 'select-component-to-edit',
+                payload: undefined,
+            }),
+        [dispatch],
+    );
 
     return (
         <div className="tooltip tooltip-left" data-tip="Create new component">
             <button
                 aria-label="Create new component"
-                disabled={isCreateNewDrawerOpen}
+                disabled={isDrawerOpen}
                 className="btn btn-accent"
-                onClick={openDrawer}
+                onClick={closeDrawer}
             >
                 <AwesomeIcon icon="hand-middle-finger" />
             </button>
@@ -84,15 +87,14 @@ function SeoSection() {
     );
 }
 
-export function CreateNewComponentDrawer() {
+export function UpdateComponentDrawer() {
     const { dispatch, state } = usePageContext();
-
-    const isDrawerOpen = state.createNewComponent.isDialogOpen;
+    const isDrawerOpen = !!state.editComponent.selected;
     const closeDrawer = useCallback(
         () =>
             dispatch({
-                type: 'toggle-create-new-component-dialog',
-                payload: false,
+                type: 'select-component-to-edit',
+                payload: undefined,
             }),
         [dispatch],
     );
@@ -102,7 +104,7 @@ export function CreateNewComponentDrawer() {
     return (
         <Drawer isOpen={isDrawerOpen} onClose={closeDrawer}>
             {isDrawerOpen && (
-                <CreateNewComponentForm className="flex flex-col gap-2" onSuccessfulSubmit={closeDrawer}>
+                <UpdateComponentForm className="flex flex-col gap-2" onSuccessfulSubmit={closeDrawer} entityId={0}>
                     <Section title="Name* and description" contentProps={{ className: 'flex flex-col gap-2' }}>
                         <NameField.FormField name="name" label="Name*" registerOptions={{ required: true }} />
                         <DescriptionField.FormField name="description" />
@@ -120,11 +122,11 @@ export function CreateNewComponentDrawer() {
                     <div className="flex-1" />
                     <section className="flex gap-4">
                         <div className="flex-1" />
-                        <CreateNewComponentForm.SubmitButton className="btn btn-accent">
-                            Create
-                        </CreateNewComponentForm.SubmitButton>
+                        <UpdateComponentForm.SubmitButton className="btn btn-accent">
+                            Update
+                        </UpdateComponentForm.SubmitButton>
                     </section>
-                </CreateNewComponentForm>
+                </UpdateComponentForm>
             )}
         </Drawer>
     );

@@ -6,18 +6,13 @@ import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
 import { useToaster } from '~/layout/Toaster';
-import { useDashboardComponentsContext } from '../Context';
+import { usePageContext } from '../../_context';
 
 import type { TPrettify } from '~/types';
 import type { TComponentEntity } from '~/server/domains/components';
 import type { TUpdateComponentServerAction } from '../../_actions';
-import type { TDashboardComponentsPage } from '../types';
 
-type UseFromHook = typeof useForm<
-    TUpdateComponentServerAction.TSchema,
-    TDashboardComponentsPage['apiData']['updateComponent']
->;
-
+type UseFromHook = typeof useForm<TUpdateComponentServerAction.TSchema>;
 type UseFormHookData = ReturnType<UseFromHook>;
 
 type BaseHtmlFormProps = Omit<
@@ -45,37 +40,37 @@ export function UpdateComponentForm({
     onSuccessfulSubmit,
     ...rest
 }: ComponentProps) {
-    const {
-        apiData: { updateComponent },
-    } = useDashboardComponentsContext();
-
+    const { dispatch, state } = usePageContext();
     const methods: UseFormHookData = useForm({
-        defaultValues: { ...defaultValues, id: entityId },
-        context: updateComponent,
+        defaultValues: { ...state.editComponent.selected, id: entityId },
     });
 
     const handleSubmit = methods.handleSubmit((data, event) => {
         onSubmit?.(data, event);
-        updateComponent.execute(data);
+        dispatch({
+            type: 'update-component',
+            payload: data,
+        });
     });
 
+    const updateComponent = state.editComponent.api;
     const { pushToast } = useToaster();
     const prevStatus = usePrevious(updateComponent.status);
     useEffect(() => {
         if (updateComponent.status === prevStatus) return;
-        if (updateComponent.status === 'hasSucceeded' && updateComponent.result.data) {
+        if (updateComponent.status === 'success' && updateComponent.data) {
             onSuccessfulSubmit?.({
                 payload: methods.getValues(),
-                response: updateComponent.result.data,
+                response: updateComponent.data,
             });
             pushToast({
                 type: 'success',
                 message: 'Updated successfully',
             });
             methods.reset();
-            updateComponent.reset();
+            dispatch({ type: 'reset-updated-component-api-data' });
         }
-    }, [updateComponent.result, updateComponent.status, prevStatus]);
+    }, [updateComponent.data, updateComponent.status, prevStatus]);
 
     return (
         <FormProvider {...methods}>
