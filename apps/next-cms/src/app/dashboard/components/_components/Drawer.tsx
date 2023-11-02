@@ -20,7 +20,7 @@ export function Drawer({
             <button
                 data-tip="Close (backdrop)"
                 onClick={onClose}
-                className="absolute left-0 right-0 w-full h-full cursor-default cursor-pointer bg-slate-700/70"
+                className="absolute left-0 right-0 w-full h-full bg-slate-700/70"
             />
             <main className="absolute right-0 w-2/3 h-full p-4 overflow-auto rounded-l bg-base-100">{children}</main>
         </aside>
