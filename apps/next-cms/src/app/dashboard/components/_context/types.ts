@@ -53,6 +53,13 @@ export namespace TContextActions {
             | 'reset-updated-component-api-data';
     };
 
+    export type TRetryLastApiCall = {
+        type:
+            | 'retry-last-create-new-component-api-call'
+            | 'retry-last-search-components-api-call'
+            | 'retry-last-updated-component-api-call';
+    };
+
     export type TAction =
         | TCreateNewComponent
         | TCreateNewComponentApiChange
@@ -62,7 +69,8 @@ export namespace TContextActions {
         | TToggleCreateNewComponentDialog
         | TUpdateComponent
         | TUpdateComponentApiChange
-        | TResetApiData;
+        | TResetApiData
+        | TRetryLastApiCall;
 
     export type TPageComponentAction =
         | TCreateNewComponent
@@ -70,7 +78,8 @@ export namespace TContextActions {
         | TSelectComponentToEdit
         | TToggleCreateNewComponentDialog
         | TUpdateComponent
-        | TResetApiData;
+        | TResetApiData
+        | TRetryLastApiCall;
 }
 
 export type TPageContext = {

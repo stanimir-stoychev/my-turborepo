@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import { useEffectOnce } from 'react-use';
 import { useAction } from 'next-safe-action/hook';
 
@@ -11,7 +11,7 @@ import {
 import { DEFAULT_CONTEXT } from '../constants';
 import { reducer } from '../reducer';
 
-import type { TPageContext } from '../types';
+import { TContextActions, type TPageContext } from '../types';
 
 const SAFE_ACTION_STATUS_MAPPER = {
     idle: 'idle',
@@ -26,20 +26,27 @@ export function useBuiltContext(): TPageContext {
     const safeUpdateComponentAction = useAction(updateComponentServerAction);
     const safeFindComponentsAction = useAction(findComponentsServerAction);
 
+    const lastCallPayloadsMapRef = useRef(new Map<TContextActions.TAction['type'], any>());
     const [reactState, reactDispatch] = useReducer(reducer, DEFAULT_CONTEXT.state);
     const dispatch: typeof DEFAULT_CONTEXT.dispatch = (action) => {
         reactDispatch(action);
 
         if (action.type === 'create-new-component' && safeCreateNewComponentAction.status !== 'executing') {
-            safeCreateNewComponentAction.execute(action.payload);
+            const apiPayload = action.payload;
+            lastCallPayloadsMapRef.current.set(action.type, apiPayload);
+            safeCreateNewComponentAction.execute(apiPayload);
         }
 
         if (action.type === 'search-components' && safeFindComponentsAction.status !== 'executing') {
-            safeFindComponentsAction.execute(action.payload ?? { any: '*' });
+            const apiPayload = action.payload ?? { any: '*' };
+            lastCallPayloadsMapRef.current.set(action.type, apiPayload);
+            safeFindComponentsAction.execute(apiPayload);
         }
 
         if (action.type === 'update-component' && safeUpdateComponentAction.status !== 'executing') {
-            safeUpdateComponentAction.execute(action.payload);
+            const apiPayload = action.payload;
+            lastCallPayloadsMapRef.current.set(action.type, apiPayload);
+            safeUpdateComponentAction.execute(apiPayload);
         }
 
         if (action.type === 'reset-create-new-component-api-data') {
@@ -52,6 +59,27 @@ export function useBuiltContext(): TPageContext {
 
         if (action.type === 'reset-updated-component-api-data') {
             safeUpdateComponentAction.reset();
+        }
+
+        if (action.type === 'retry-last-create-new-component-api-call') {
+            const apiPayload = lastCallPayloadsMapRef.current.get('create-new-component');
+            if (apiPayload) {
+                safeCreateNewComponentAction.execute(apiPayload);
+            }
+        }
+
+        if (action.type === 'retry-last-search-components-api-call') {
+            const apiPayload = lastCallPayloadsMapRef.current.get('search-components');
+            if (apiPayload) {
+                safeFindComponentsAction.execute(apiPayload);
+            }
+        }
+
+        if (action.type === 'retry-last-updated-component-api-call') {
+            const apiPayload = lastCallPayloadsMapRef.current.get('update-component');
+            if (apiPayload) {
+                safeUpdateComponentAction.execute(apiPayload);
+            }
         }
     };
 

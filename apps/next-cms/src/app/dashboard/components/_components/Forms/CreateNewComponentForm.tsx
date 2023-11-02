@@ -60,6 +60,7 @@ export function CreateNewComponentForm({ onSubmit, onSuccessfulSubmit, ...rest }
             });
             methods.reset();
             dispatch({ type: 'reset-create-new-component-api-data' });
+            dispatch({ type: 'retry-last-search-components-api-call' });
         }
     }, [dataSource.data, dataSource.status, prevStatus]);
 

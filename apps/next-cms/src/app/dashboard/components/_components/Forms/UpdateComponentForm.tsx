@@ -69,6 +69,7 @@ export function UpdateComponentForm({
             });
             methods.reset();
             dispatch({ type: 'reset-updated-component-api-data' });
+            dispatch({ type: 'retry-last-search-components-api-call' });
         }
     }, [updateComponent.data, updateComponent.status, prevStatus]);
 
