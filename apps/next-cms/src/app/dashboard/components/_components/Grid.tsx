@@ -1,6 +1,5 @@
 'use client';
 
-import { Fragment } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -10,7 +9,8 @@ import { GRID_SIZES, GRID_SIZES_ICON_PROPS } from './constants';
 import { usePageContext } from '../_context';
 
 export function GridSizeToggle({ className, ...rest }: React.HtmlHTMLAttributes<HTMLDivElement>) {
-    const gridSize = GRID_SIZES[0];
+    const { dispatch, state } = usePageContext();
+    const gridSize = state.grid.size;
     return (
         <aside
             aria-label="Size toggle"
@@ -24,7 +24,12 @@ export function GridSizeToggle({ className, ...rest }: React.HtmlHTMLAttributes<
                 <button
                     key={size}
                     className={clsx('tab tab-sm', size === gridSize && 'tab-active')}
-                    // onClick={() => setSize(size)}
+                    onClick={() =>
+                        dispatch({
+                            type: 'change-grid-size',
+                            payload: size,
+                        })
+                    }
                 >
                     <AwesomeIcon {...GRID_SIZES_ICON_PROPS[size]} />
                 </button>
@@ -36,7 +41,7 @@ export function GridSizeToggle({ className, ...rest }: React.HtmlHTMLAttributes<
 export function Grid({ children, className, ...rest }: React.HtmlHTMLAttributes<HTMLUListElement>) {
     const { dispatch, state } = usePageContext();
     const data = state.findComponents.api.data;
-    const gridSize = GRID_SIZES[0];
+    const gridSize = state.grid.size;
 
     return (
         <ul

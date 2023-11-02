@@ -31,5 +31,10 @@ export const DEFAULT_CONTEXT: TPageContext = {
                 data: undefined,
             },
         },
+
+        grid: {
+            size: 'md',
+            pages: [],
+        },
     },
 };

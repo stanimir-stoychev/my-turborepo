@@ -12,7 +12,7 @@ export namespace TContextActions {
 
     export type TCreateNewComponent = {
         type: 'create-new-component';
-        payload: TCreateNewComponentServerAction.TSchema;
+        payload: NonNullable<TPageContext['state']['createNewComponent']['api']['payload']>;
     };
 
     export type TCreateNewComponentApiChange = {
@@ -22,7 +22,7 @@ export namespace TContextActions {
 
     export type TFindComponents = {
         type: 'search-components';
-        payload?: TFindComponentsServerAction.TSchema;
+        payload: TPageContext['state']['findComponents']['api']['payload'];
     };
 
     // Should take a look later...
@@ -38,7 +38,7 @@ export namespace TContextActions {
 
     export type TUpdateComponent = {
         type: 'update-component';
-        payload: TUpdateComponentServerAction.TSchema;
+        payload: NonNullable<TPageContext['state']['editComponent']['api']['payload']>;
     };
 
     export type TUpdateComponentApiChange = {
@@ -60,6 +60,16 @@ export namespace TContextActions {
             | 'retry-last-updated-component-api-call';
     };
 
+    export type TChangeGridSize = {
+        type: 'change-grid-size';
+        payload: TPageContext['state']['grid']['size'];
+    };
+
+    export type TChangeGridPages = {
+        type: 'change-grid-pages';
+        payload: TPageContext['state']['grid']['pages'];
+    };
+
     export type TAction =
         | TCreateNewComponent
         | TCreateNewComponentApiChange
@@ -70,7 +80,9 @@ export namespace TContextActions {
         | TUpdateComponent
         | TUpdateComponentApiChange
         | TResetApiData
-        | TRetryLastApiCall;
+        | TRetryLastApiCall
+        | TChangeGridSize
+        | TChangeGridPages;
 
     export type TPageComponentAction =
         | TCreateNewComponent
@@ -79,7 +91,8 @@ export namespace TContextActions {
         | TToggleCreateNewComponentDialog
         | TUpdateComponent
         | TResetApiData
-        | TRetryLastApiCall;
+        | TRetryLastApiCall
+        | TChangeGridSize;
 }
 
 export type TPageContext = {
@@ -111,6 +124,11 @@ export type TPageContext = {
                 status: 'idle' | 'pending' | 'success' | 'error';
                 data?: TFindComponentsServerAction.Data;
             };
+        };
+
+        grid: {
+            size: 'sm' | 'md' | 'lg';
+            pages: TFindComponentsServerAction.Data[];
         };
     };
 };

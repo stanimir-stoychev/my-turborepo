@@ -76,6 +76,17 @@ const handleUpdateComponent: THandleAction<
     },
 });
 
+const handleGridChanges: THandleAction<TContextActions.TChangeGridSize | TContextActions.TChangeGridPages> = ({
+    action,
+    state,
+}) => ({
+    ...state,
+    grid: {
+        ...state.grid,
+        [action.type === 'change-grid-size' ? 'size' : 'pages']: action.payload,
+    },
+});
+
 export const reducer = (state = DEFAULT_CONTEXT.state, action: TContextActions.TAction) => {
     switch (action.type) {
         case 'toggle-create-new-component-dialog':
@@ -91,6 +102,9 @@ export const reducer = (state = DEFAULT_CONTEXT.state, action: TContextActions.T
         case 'update-component':
         case 'updated-component-api-change':
             return handleUpdateComponent({ action, state });
+        case 'change-grid-pages':
+        case 'change-grid-size':
+            return handleGridChanges({ action, state });
         default:
             return state;
     }
