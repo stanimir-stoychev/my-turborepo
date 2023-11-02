@@ -44,20 +44,43 @@ const handleCreateNewComponent: THandleAction<
 
 const handleSearchComponents: THandleAction<
     TContextActions.TFindComponents | TContextActions.TFindComponentsApiChange
-> = ({ action, state }) => ({
-    ...state,
-    findComponents: {
-        ...state.findComponents,
-        api: {
-            ...state.findComponents.api,
-            ...(action.type === 'search-components-api-change'
-                ? action.payload
-                : {
-                      payload: { ...action.payload },
-                  }),
+> = ({ action, state }) => {
+    const generateNewGridData = () => {
+        if (action.type !== 'search-components-api-change') return state.grid;
+        if (action.payload.status === 'pending') return state.grid;
+
+        const { cursor: c1, ...restOfCurrentQuery } = state.findComponents.query ?? {};
+        const { cursor: c2, ...restOfNewQuery } = state.findComponents.api.payload ?? {};
+
+        const shouldResetGridPages = JSON.stringify(restOfCurrentQuery) !== JSON.stringify(restOfNewQuery);
+        const dataAsArray = action.payload.data ? [action.payload.data] : [];
+
+        return {
+            ...state.grid,
+            pages: shouldResetGridPages ? dataAsArray : [...state.grid.pages, ...dataAsArray],
+        };
+    };
+
+    return {
+        ...state,
+        grid: generateNewGridData(),
+        findComponents: {
+            ...state.findComponents,
+            ...(action.type === 'search-components-api-change' &&
+                action.payload.status !== 'pending' && {
+                    query: state.findComponents.api.payload,
+                }),
+            api: {
+                ...state.findComponents.api,
+                ...(action.type === 'search-components-api-change'
+                    ? action.payload
+                    : {
+                          payload: { ...action.payload },
+                      }),
+            },
         },
-    },
-});
+    };
+};
 
 const handleUpdateComponent: THandleAction<
     TContextActions.TUpdateComponent | TContextActions.TUpdateComponentApiChange

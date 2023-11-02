@@ -139,7 +139,7 @@ export function useBuiltContext(): TPageContext {
 
         dispatch({
             type: 'search-components',
-            payload: undefined,
+            payload: { any: '*' },
         });
     });
 
