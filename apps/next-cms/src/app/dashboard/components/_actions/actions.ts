@@ -38,8 +38,9 @@ export namespace TUpdateComponentServerAction {
     export type Data = Awaited<ReturnType<typeof updateComponentHandler>>;
 }
 
-const findComponentsHandler = async (query: z.infer<typeof zFindComponentQuery>) => {
-    const components = await ComponentsService.find(query);
+const findComponentsHandler = async (queryArgs: z.infer<typeof zFindComponentQuery>) => {
+    const { cursor, limit, ...query } = queryArgs;
+    const components = await ComponentsService.find(query, { cursor, limit });
     return components;
 };
 
