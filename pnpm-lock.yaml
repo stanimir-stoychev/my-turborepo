@@ -102,6 +102,7 @@ importers:
       '@tailwindcss/forms': ^0.5.6
       '@tailwindcss/typography': ^0.5.10
       '@tanstack/react-query': ^5.4.3
+      '@tanstack/react-query-devtools': ^5.4.3
       '@types/chroma-js': ^2.4.2
       '@types/eslint': ^8.44.6
       '@types/node': ^20.8.10
@@ -156,6 +157,7 @@ importers:
       '@tailwindcss/container-queries': 0.1.1_tailwindcss@3.3.5
       '@tailwindcss/forms': 0.5.6_tailwindcss@3.3.5
       '@tailwindcss/typography': 0.5.10_tailwindcss@3.3.5
+      '@tanstack/react-query-devtools': 5.4.3_nq4axp7tpwesnkxrjl7wvk3tfa
       '@types/chroma-js': 2.4.2
       '@types/eslint': 8.44.6
       '@types/node': 20.8.10
@@ -1490,7 +1492,23 @@ packages:
 
   /@tanstack/query-core/5.4.3:
     resolution: {integrity: sha512-fnI9ORjcuLGm1sNrKatKIosRQUpuqcD4SV7RqRSVmj8JSicX2aoMyKryHEBpVQvf6N4PaBVgBxQomjsbsGPssQ==}
-    dev: false
+
+  /@tanstack/query-devtools/5.4.2:
+    resolution: {integrity: sha512-EXdaMXi8CxZuMp97J5mq6wy1RduOfoWFv5vtA1U+hyqb8Wst6M8kkkjDSdFvGZIRpYY4K8mKLlEFHNUZDG5dtw==}
+    dev: true
+
+  /@tanstack/react-query-devtools/5.4.3_nq4axp7tpwesnkxrjl7wvk3tfa:
+    resolution: {integrity: sha512-J9EB50vpK5yvQ5W+AOp9jIQa+1mld+Wwc2GF3VLr2SEDhOyiTiHOjrFGKKL1Cal5Wg8UuS3vexf8trElrtg05A==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.4.3
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      '@tanstack/query-devtools': 5.4.2
+      '@tanstack/react-query': 5.4.3_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: true
 
   /@tanstack/react-query/5.4.3_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-4aSOrRNa6yEmf7mws5QPTVMn8Lp7L38tFoTZ0c1ZmhIvbr8GIA0WT7X5N3yz/nuK8hUtjw9cAzBr4BPDZZ+tzA==}
@@ -1507,7 +1525,6 @@ packages:
       '@tanstack/query-core': 5.4.3
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-    dev: false
 
   /@tsconfig/node10/1.0.9:
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
@@ -5484,7 +5501,6 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
-    dev: false
 
   /react-hook-form/7.47.0_react@18.2.0:
     resolution: {integrity: sha512-F/TroLjTICipmHeFlMrLtNLceO2xr1jU3CyiNla5zdwsGUGu2UOxxR4UyJgLlhMwLW/Wzp4cpJ7CPfgJIeKdSg==}
@@ -5734,7 +5750,6 @@ packages:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /screenfull/5.2.0:
     resolution: {integrity: sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==}
