@@ -13,6 +13,9 @@ export const isGatewayError = (error: any): error is TGatewayError => {
     return !!error && Array.isArray(error?.props) && typeof error?.message === 'string';
 };
 
+export const filterOutGateWayErrors = <T>(dataSource: (T | TGatewayError)[]): T[] =>
+    dataSource.filter((item) => !isGatewayError(item)) as T[];
+
 export type TComponentsGateway = {
     find: (
         args: z.infer<typeof zFindComponentQuery>,
