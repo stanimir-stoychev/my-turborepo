@@ -1,4 +1,5 @@
 import {
+    InfiniteData,
     UseInfiniteQueryOptions,
     useInfiniteQuery as useInfiniteReactQuery,
     UseQueryOptions,
@@ -20,25 +21,25 @@ export module FindComponentsQuery {
             ...options,
         });
 
-    export const useInfiniteQuery = (
+    export const useInfiniteQuery = <T = TApiResponse>(
         query: Parameters<typeof queryKeys.infiniteSearch>[0],
-        options: Omit<
+        options?: Omit<
             UseInfiniteQueryOptions<
                 TApiResponse,
                 unknown,
+                InfiniteData<T>,
                 TApiResponse,
-                any,
                 ReturnType<typeof queryKeys.infiniteSearch>,
                 number | undefined
             >,
-            'queryFn' | 'queryKey' | 'getNextPageParam' | 'getPreviousPageParam'
+            'queryFn' | 'queryKey' | 'getNextPageParam' | 'getPreviousPageParam' | 'initialPageParam'
         >,
     ) =>
         useInfiniteReactQuery({
             queryKey: queryKeys.infiniteSearch(query),
             queryFn: ({ pageParam: cursor }) => findComponentsGateway({ ...query, cursor }),
-            ...options,
             getNextPageParam: (lastPage) => (isGatewayError(lastPage) ? undefined : lastPage.nextCursor),
             initialPageParam: query.cursor,
+            ...options,
         });
 }
