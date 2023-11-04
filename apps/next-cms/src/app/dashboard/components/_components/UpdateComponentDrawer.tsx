@@ -6,22 +6,15 @@ import { useKey, useToggle } from 'react-use';
 
 import { AwesomeIcon } from '~/components';
 
-import { usePageContext } from '../_context';
+import { usePageView } from './PageView';
 import { UpdateComponentForm } from './Forms';
 import { ComponentHtmlField, DescriptionField, NameField, SeoDescriptionField, SeoNameField } from './Fields';
 import { Drawer } from './Drawer';
 
 export function UpdateComponentDrawerOpenButton() {
-    const { dispatch, state } = usePageContext();
-    const isDrawerOpen = !!state.editComponent.selected;
-    const closeDrawer = useCallback(
-        () =>
-            dispatch({
-                type: 'select-component-to-edit',
-                payload: undefined,
-            }),
-        [dispatch],
-    );
+    const { editComponent, viewActions } = usePageView();
+    const isDrawerOpen = !!editComponent;
+    const closeDrawer = useCallback(() => viewActions.setEditComponent(undefined), [viewActions.setEditComponent]);
 
     return (
         <div className="tooltip tooltip-left" data-tip="Create new component">
@@ -88,16 +81,9 @@ function SeoSection() {
 }
 
 export function UpdateComponentDrawer() {
-    const { dispatch, state } = usePageContext();
-    const isDrawerOpen = !!state.editComponent.selected;
-    const closeDrawer = useCallback(
-        () =>
-            dispatch({
-                type: 'select-component-to-edit',
-                payload: undefined,
-            }),
-        [dispatch],
-    );
+    const { editComponent, viewActions } = usePageView();
+    const isDrawerOpen = !!editComponent;
+    const closeDrawer = useCallback(() => viewActions.setEditComponent(undefined), [viewActions.setEditComponent]);
 
     useKey('Escape', closeDrawer, { event: 'keydown' });
 

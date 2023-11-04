@@ -6,7 +6,7 @@ export module DeleteComponentQuery {
     export type TApiResponse = Awaited<ReturnType<typeof deleteComponentGateway>>;
 
     export const useMutation = (
-        options: UseMutationOptions<TApiResponse, unknown, Parameters<typeof queryKeys.delete>[0]>,
+        options?: UseMutationOptions<TApiResponse, unknown, Parameters<typeof queryKeys.delete>[0]>,
     ) =>
         useReactMutation({
             mutationFn: deleteComponentGateway,

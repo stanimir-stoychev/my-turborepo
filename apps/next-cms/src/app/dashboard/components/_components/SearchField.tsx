@@ -6,11 +6,11 @@ import { twMerge } from 'tailwind-merge';
 import { AwesomeIcon } from '~/components';
 import { useToaster } from '~/layout/Toaster';
 
-import { usePageContext } from '../_context';
+import { usePageView } from './PageView';
 
 export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttributes<HTMLFormElement>) {
     const { pushToast } = useToaster();
-    const { dispatch } = usePageContext();
+    const { viewActions } = usePageView();
 
     const inputRef = useRef<HTMLInputElement>(null);
     const [searchTerm, setSearchTerm] = useState<string>();
@@ -45,10 +45,7 @@ export function SearchField({ className, onSubmit, ...rest }: React.HtmlHTMLAttr
         }
 
         setSearchTerm(searchValue);
-        dispatch({
-            type: 'search-components',
-            payload: { any: searchValue || '*' },
-        });
+        viewActions.setSearchTerm(searchValue);
     };
 
     return (

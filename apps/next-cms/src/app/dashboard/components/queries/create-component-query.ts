@@ -21,7 +21,7 @@ export module CreateComponentQuery {
         });
 
     export const useMutation = (
-        options: UseMutationOptions<TApiResponse, unknown, Parameters<typeof queryKeys.create>[0]>,
+        options?: UseMutationOptions<TApiResponse, unknown, Parameters<typeof queryKeys.create>[0]>,
     ) =>
         useReactMutation({
             mutationFn: createComponentGateway,

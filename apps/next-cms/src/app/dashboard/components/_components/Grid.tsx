@@ -1,21 +1,19 @@
 'use client';
 
+import { Fragment, useEffect } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 import { AwesomeIcon } from '~/components';
 import { useIntersection } from '~/utils/hooks';
 
-import { GRID_SIZES, GRID_SIZES_ICON_PROPS } from './constants';
-import { usePageContext } from '../_context';
-import { Fragment, useEffect } from 'react';
-import { usePageView } from './PageView';
-import { FindComponentsQuery } from '../queries';
 import { filterOutGateWayErrors } from '../_actions';
+import { FindComponentsQuery } from '../queries';
+import { GRID_SIZES, GRID_SIZES_ICON_PROPS } from './constants';
+import { usePageView } from './PageView';
 
 export function GridSizeToggle({ className, ...rest }: React.HtmlHTMLAttributes<HTMLDivElement>) {
-    const { dispatch, state } = usePageContext();
-    const gridSize = state.grid.size;
+    const { gridSize, viewActions } = usePageView();
     return (
         <aside
             aria-label="Size toggle"
@@ -29,12 +27,7 @@ export function GridSizeToggle({ className, ...rest }: React.HtmlHTMLAttributes<
                 <button
                     key={size}
                     className={clsx('tab tab-sm', size === gridSize && 'tab-active')}
-                    onClick={() =>
-                        dispatch({
-                            type: 'change-grid-size',
-                            payload: size,
-                        })
-                    }
+                    onClick={() => viewActions.setGridSize(size)}
                 >
                     <AwesomeIcon {...GRID_SIZES_ICON_PROPS[size]} />
                 </button>

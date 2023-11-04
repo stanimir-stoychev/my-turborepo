@@ -6,27 +6,20 @@ import { useKey, useToggle } from 'react-use';
 
 import { AwesomeIcon } from '~/components';
 
-import { usePageContext } from '../_context';
+import { usePageView } from './PageView';
 import { CreateNewComponentForm } from './Forms';
 import { ComponentHtmlField, DescriptionField, NameField, SeoDescriptionField, SeoNameField } from './Fields';
 import { Drawer } from './Drawer';
 
 export function CreateNewComponentDrawerOpenButton() {
-    const { dispatch, state } = usePageContext();
-    const isCreateNewDrawerOpen = state.createNewComponent.isDialogOpen;
-    const openDrawer = () =>
-        dispatch({
-            type: 'toggle-create-new-component-dialog',
-            payload: true,
-        });
-
+    const { createNewComponent, viewActions } = usePageView();
     return (
         <div className="tooltip tooltip-left" data-tip="Create new component">
             <button
                 aria-label="Create new component"
-                disabled={isCreateNewDrawerOpen}
+                disabled={createNewComponent}
                 className="btn btn-accent"
-                onClick={openDrawer}
+                onClick={() => viewActions.setCreateNewComponent(true)}
             >
                 <AwesomeIcon icon="hand-middle-finger" />
             </button>
@@ -85,16 +78,12 @@ function SeoSection() {
 }
 
 export function CreateNewComponentDrawer() {
-    const { dispatch, state } = usePageContext();
+    const { createNewComponent, viewActions } = usePageView();
 
-    const isDrawerOpen = state.createNewComponent.isDialogOpen;
+    const isDrawerOpen = !!createNewComponent;
     const closeDrawer = useCallback(
-        () =>
-            dispatch({
-                type: 'toggle-create-new-component-dialog',
-                payload: false,
-            }),
-        [dispatch],
+        () => viewActions.setCreateNewComponent(false),
+        [viewActions.setCreateNewComponent],
     );
 
     useKey('Escape', closeDrawer, { event: 'keydown' });

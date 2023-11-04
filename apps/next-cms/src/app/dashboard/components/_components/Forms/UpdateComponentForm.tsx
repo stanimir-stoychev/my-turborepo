@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
-import { usePrevious } from 'react-use';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
+import { useQueryClient } from '@tanstack/react-query';
 import { twMerge } from 'tailwind-merge';
 
 import { useToaster } from '~/layout/Toaster';
-import { usePageContext } from '../../_context';
+import { UpdateComponentQuery, queryKeys } from '../../queries';
+import { usePageView } from '../PageView';
 
 import type { TPrettify } from '~/types';
 import type { TComponentEntity } from '~/server/domains/components';
@@ -40,38 +40,29 @@ export function UpdateComponentForm({
     onSuccessfulSubmit,
     ...rest
 }: ComponentProps) {
-    const { dispatch, state } = usePageContext();
-    const methods: UseFormHookData = useForm({
-        defaultValues: { ...state.editComponent.selected, id: entityId },
-    });
+    const { editComponent, viewActions } = usePageView();
 
-    const handleSubmit = methods.handleSubmit((data, event) => {
-        onSubmit?.(data, event);
-        dispatch({
-            type: 'update-component',
-            payload: data,
-        });
-    });
-
-    const updateComponent = state.editComponent.api;
     const { pushToast } = useToaster();
-    const prevStatus = usePrevious(updateComponent.status);
-    useEffect(() => {
-        if (updateComponent.status === prevStatus) return;
-        if (updateComponent.status === 'success' && updateComponent.data) {
-            onSuccessfulSubmit?.({
-                payload: methods.getValues(),
-                response: updateComponent.data,
-            });
+    const queryClient = useQueryClient();
+    const { mutate } = UpdateComponentQuery.useMutation({
+        onSuccess: () => {
+            viewActions.setEditComponent(undefined);
+            queryClient.invalidateQueries({ queryKey: queryKeys.root });
             pushToast({
                 type: 'success',
                 message: 'Updated successfully',
             });
-            methods.reset();
-            dispatch({ type: 'reset-updated-component-api-data' });
-            dispatch({ type: 'retry-last-search-components-api-call' });
-        }
-    }, [updateComponent.data, updateComponent.status, prevStatus]);
+        },
+    });
+
+    const methods: UseFormHookData = useForm({
+        defaultValues: { ...editComponent, id: entityId },
+    });
+
+    const handleSubmit = methods.handleSubmit((data, event) => {
+        onSubmit?.(data, event);
+        mutate(data);
+    });
 
     return (
         <FormProvider {...methods}>

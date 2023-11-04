@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
-import { usePrevious } from 'react-use';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
+import { useQueryClient } from '@tanstack/react-query';
 import { twMerge } from 'tailwind-merge';
 
 import { useToaster } from '~/layout/Toaster';
-import { usePageContext } from '../../_context';
+
+import { CreateComponentQuery, queryKeys } from '../../queries';
+import { usePageView } from '../PageView';
 
 import type { TPrettify } from '~/types';
 import type { TCreateNewComponentServerAction } from '../../_actions';
@@ -31,38 +32,30 @@ type ComponentProps = TPrettify<
 >;
 
 export function CreateNewComponentForm({ onSubmit, onSuccessfulSubmit, ...rest }: ComponentProps) {
-    const { dispatch, state } = usePageContext();
-    const methods: UseFormHookData = useForm({
-        defaultValues: state.createNewComponent.defaultValues,
-    });
+    const { viewActions } = usePageView();
+    const methods: UseFormHookData = useForm();
 
-    const handleSubmit = methods.handleSubmit((data, event) => {
-        onSubmit?.(data, event);
-        dispatch({
-            type: 'create-new-component',
-            payload: data,
-        });
-    });
-
-    const dataSource = state.createNewComponent.api;
     const { pushToast } = useToaster();
-    const prevStatus = usePrevious(dataSource.status);
-    useEffect(() => {
-        if (dataSource.status === prevStatus) return;
-        if (dataSource.status === 'success' && dataSource.data) {
-            onSuccessfulSubmit?.({
-                payload: methods.getValues(),
-                response: dataSource.data,
-            });
+    const queryClient = useQueryClient();
+    const { mutate } = CreateComponentQuery.useMutation({
+        onSuccess: () => {
             pushToast({
                 type: 'success',
                 message: 'Created successfully',
             });
-            methods.reset();
-            dispatch({ type: 'reset-create-new-component-api-data' });
-            dispatch({ type: 'retry-last-search-components-api-call' });
-        }
-    }, [dataSource.data, dataSource.status, prevStatus]);
+
+            queryClient.invalidateQueries({
+                queryKey: queryKeys.root,
+            });
+
+            viewActions.setCreateNewComponent(false);
+        },
+    });
+
+    const handleSubmit = methods.handleSubmit((data, event) => {
+        onSubmit?.(data, event);
+        mutate(data);
+    });
 
     return (
         <FormProvider {...methods}>

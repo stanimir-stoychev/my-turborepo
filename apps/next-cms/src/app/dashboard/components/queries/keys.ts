@@ -9,6 +9,8 @@ import {
 const ROOT_KEY = 'dashboard/components';
 
 export const queryKeys = {
+    root: [ROOT_KEY],
+
     total: [ROOT_KEY, 'total'],
     find: (query: Parameters<typeof findComponentsGateway>[0]) => [ROOT_KEY, 'find', query] as const,
     create: (data: Parameters<typeof createComponentGateway>[0]) => [ROOT_KEY, 'create', data] as const,

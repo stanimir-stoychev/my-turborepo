@@ -21,7 +21,7 @@ export module UpdateComponentQuery {
         });
 
     export const useMutation = (
-        options: UseMutationOptions<TApiResponse, unknown, Parameters<typeof queryKeys.update>[0]>,
+        options?: UseMutationOptions<TApiResponse, unknown, Parameters<typeof queryKeys.update>[0]>,
     ) =>
         useReactMutation({
             mutationFn: updateComponentGateway,
