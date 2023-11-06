@@ -8,7 +8,7 @@ import { AwesomeIcon } from '~/components';
 import { useIntersection } from '~/utils/hooks';
 
 import { filterOutGateWayErrors } from '../_actions';
-import { FindComponentsQuery } from '../queries';
+import { FindComponentsQuery } from '../_queries';
 import { GRID_SIZES, GRID_SIZES_ICON_PROPS } from './constants';
 import { usePageView } from './PageView';
 

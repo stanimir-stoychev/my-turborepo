@@ -6,7 +6,7 @@ import { twMerge } from 'tailwind-merge';
 
 import { useToaster } from '~/layout/Toaster';
 
-import { CreateComponentQuery, queryKeys } from '../../queries';
+import { CreateComponentQuery, queryKeys } from '../../_queries';
 import { usePageView } from '../PageView';
 
 import type { TPrettify } from '~/types';
