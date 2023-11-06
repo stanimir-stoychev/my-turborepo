@@ -59,3 +59,5 @@ export const zFindComponentQuery = z.object({
     limit: z.number().optional(),
     cursor: z.number().optional(),
 });
+
+export const zReadComponent = z.number();

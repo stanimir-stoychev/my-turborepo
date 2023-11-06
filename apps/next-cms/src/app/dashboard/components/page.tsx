@@ -1,23 +1,18 @@
 import { DashboardTitle } from '~/layout';
-import { createNewComponentServerAction, findComponentsServerAction } from './_actions';
 import {
-    DashboardComponentsProvider,
-    SearchField,
     CreateNewComponentDrawer,
     CreateNewComponentDrawerOpenButton,
     Grid,
     GridSizeToggle,
+    PageViewProvider,
+    SearchField,
+    UpdateComponentDrawer,
 } from './_components';
 
 export default function DashboardComponentsPage() {
     return (
         <main className="relative flex flex-col gap-4 px-4 py-2">
-            <DashboardComponentsProvider
-                serverActions={{
-                    createNewComponent: createNewComponentServerAction,
-                    findComponents: findComponentsServerAction,
-                }}
-            >
+            <PageViewProvider>
                 <DashboardTitle>Components</DashboardTitle>
                 <hr />
                 <div className="flex items-center justify-between gap-2">
@@ -29,7 +24,8 @@ export default function DashboardComponentsPage() {
                     <CreateNewComponentDrawerOpenButton />
                 </aside>
                 <CreateNewComponentDrawer />
-            </DashboardComponentsProvider>
+                <UpdateComponentDrawer />
+            </PageViewProvider>
         </main>
     );
 }

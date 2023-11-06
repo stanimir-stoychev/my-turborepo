@@ -43,7 +43,6 @@ const getNextId = (): number => {
 
 export const InMemoryFuseComponentsRepository: TComponentsRepository = {
     create: async (component) => {
-        const timestamp = new Date().toISOString();
         const newComponent = {
             id: getNextId(),
             ...component,
@@ -66,13 +65,13 @@ export const InMemoryFuseComponentsRepository: TComponentsRepository = {
         return { ...item, id: parseInt(item.id, 10) };
     },
 
-    update: async ({ id, name, html, description }) => {
+    update: async ({ id, name, html, htmlProps, description }) => {
         const currentState = FUSE_IN_MEMORY_STORAGE.search({
             id: id.toString(),
         })[0];
 
         if (!currentState) {
-            throw new Error(`Component with id "${id}" was not found!`);
+            throw new Error(`Component with id of "${id}" was not found!`);
         }
 
         const updatedComponent = {
@@ -80,6 +79,12 @@ export const InMemoryFuseComponentsRepository: TComponentsRepository = {
             name: name ?? currentState.item.name,
             html: html ?? currentState.item.html,
             description: description ?? currentState.item.description,
+            htmlProps: !htmlProps
+                ? currentState.item.htmlProps
+                : {
+                      ...currentState.item.htmlProps,
+                      ...htmlProps,
+                  },
         };
 
         FUSE_IN_MEMORY_STORAGE.removeAt(currentState.refIndex);
@@ -129,7 +134,7 @@ export const InMemoryFuseComponentsRepository: TComponentsRepository = {
             }
         }
 
-        const items = allItems.slice(offset, offset + limit + 1);
+        const items = [...allItems].slice(offset, offset + limit + 1);
         const nextCursorComponent = items[limit];
 
         if (nextCursorComponent) {

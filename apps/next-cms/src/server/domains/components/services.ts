@@ -45,7 +45,6 @@ const sanitizeHtmlProps = (htmlProps: THtmlComponent['htmlProps']): THtmlCompone
     if (!htmlProps) return undefined;
     return Object.entries(htmlProps).reduce(
         (acc, [key, value]) => {
-            console.log({ key, value });
             if (value) {
                 acc[key as keyof typeof acc] = value;
             }
