@@ -15,7 +15,6 @@ export const ComponentsGateway: TComponentsGateway = {
     find: async (args) => {
         const validationError = validateDataAgainstSchema(zFindComponentQuery, args);
         if (validationError) {
-            console.log('validationError', validationError);
             return {
                 props: [],
                 message: validationError.message,
@@ -23,7 +22,8 @@ export const ComponentsGateway: TComponentsGateway = {
         }
 
         try {
-            const result = await ComponentsService.find(args);
+            const { cursor, limit } = args;
+            const result = await ComponentsService.find(args, { cursor, limit });
             return result;
         } catch (error: any) {
             return {
